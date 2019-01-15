@@ -1,6 +1,9 @@
 package com.yan.domain;
 
+import com.yan.util.ActiveCode;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Package ：com.yan.domain
@@ -21,6 +24,22 @@ public class User implements Serializable {
     private String active_code;
     private String type;
     private String status;
+
+    public User(){
+
+    }
+
+    public User(String email, String username, String password){
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        integral = "0";
+        credit = "0";
+        reg_time = String.valueOf(new Date().getTime());
+        active_code = ActiveCode.getActiveCode();
+        type = "1";
+        status = "0";
+    }
 
     public String getUid() {
         return uid;

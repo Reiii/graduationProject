@@ -20,6 +20,12 @@ public class StatusMsg {
 
     public static final String USER_LOCKED = "账号被锁定";
 
-    public static final String SEND_MAIL = "已发送邮件到邮箱";
+    public static final String SEND_MAIL = "已发送邮件到邮箱,请到邮箱激活账号";
+
+    public static final String REG_ERROR = "注册失败";
+
+    public static final String ACTIVE_SUCCESS = "激活成功";
+
+    public static final String ACTIVE_FAILED = "激活失败";
 
 }
