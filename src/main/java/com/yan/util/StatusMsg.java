@@ -22,10 +22,24 @@ public class StatusMsg {
 
     public static final String SEND_MAIL = "已发送邮件到邮箱,请到邮箱激活账号";
 
+    public static final String RESET_PASSWORD = "已发送邮件到邮箱,请到邮箱验证";
+
     public static final String REG_ERROR = "注册失败";
 
     public static final String ACTIVE_SUCCESS = "激活成功";
 
     public static final String ACTIVE_FAILED = "激活失败";
+
+    public static final String NOT_LOGIN = "未登录";
+
+    public static final String ALLOW_CHANGE = "验证成功";
+
+    public static final String DENY_CHANGE = "验证失败";
+
+    public static final String CHANGE_SUCCESS = "修改成功";
+
+    public static final String CHANGE_FAILED = "修改失败";
+
+    public static final String UNKNOW_ERROR = "未知错误";
 
 }

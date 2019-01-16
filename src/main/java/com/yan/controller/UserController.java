@@ -24,7 +24,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/check_email", method = RequestMethod.GET)
+    @RequestMapping(value = "/checkEmail", method = RequestMethod.GET)
     public Status check_email(String email){
         Status msg = new Status();
         if(userService.check_email(email)){
@@ -44,7 +44,7 @@ public class UserController {
     public Status doReg(String email, String password, String username){
         Status status = new Status();
         User user = new User(email, username, password);
-        if(Utils.isEmail(email) && userService.register(user)){
+        if(userService.register(user)){
             status.setStatus(StatusMsg.SEND_MAIL);
         }else{
             status.setStatus(StatusMsg.REG_ERROR);
@@ -68,7 +68,10 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(HttpSession session){
-        if(session.getAttribute("user") != null){
+        User user = (User)session.getAttribute("user");
+        if(user != null){
+            ModelAndView mav = new ModelAndView("mall");
+            mav.addObject("user", user);
             return new ModelAndView("mall");
         }else{
             return new ModelAndView("login");
@@ -87,6 +90,108 @@ public class UserController {
             status.setStatus(StatusMsg.LOGIN_SUCCESS);
         }else{
             status.setStatus(StatusMsg.LOGIN_FAILED);
+        }
+        return status;
+    }
+
+    @RequestMapping(value = "/setPassword/change", method = RequestMethod.GET)
+    public Status change_password(HttpSession session){
+        Status status = new Status();
+        User user = (User)session.getAttribute("user");
+        if(user != null){
+            userService.change_password(user);
+            status.setStatus(StatusMsg.RESET_PASSWORD);
+        }else{
+            status.setStatus(StatusMsg.NOT_LOGIN);
+        }
+        return status;
+    }
+
+    @RequestMapping(value = "/setPassword/verify", method = RequestMethod.GET)
+    public Status verify(String uid, String code, HttpSession session){
+        Status status = new Status();
+        User user = new User();
+        user.setUid(uid);
+        user.setActive_code(code);
+        if(userService.verify_code(user)){
+            session.setAttribute("changePassword", uid);
+            status.setStatus(StatusMsg.ALLOW_CHANGE);
+        }else{
+            status.setStatus(StatusMsg.DENY_CHANGE);
+        }
+        return status;
+    }
+
+    @RequestMapping(value = "/setPassword/set", method = RequestMethod.GET)
+    public ModelAndView setPasswordPage(HttpSession session){
+        if(session.getAttribute("changePassword") != null){
+            return new ModelAndView("setPassword");
+        }else{
+            return new ModelAndView("error");
+        }
+    }
+
+    @RequestMapping(value = "/setPassword/update", method = RequestMethod.POST)
+    public Status updatePassword(String password, HttpSession session){
+        Status status = new Status();
+        String uid = (String)session.getAttribute("changePassword");
+        if(uid != null){
+            User user = new User();
+            user.setUid(uid);
+            user.setPassword(password);
+            if(userService.update(user) != null){
+                session.removeAttribute("changePassword");
+                status.setStatus(StatusMsg.CHANGE_SUCCESS);
+            }else{
+                status.setStatus(StatusMsg.CHANGE_FAILED);
+            }
+        }else{
+            status.setStatus(StatusMsg.UNKNOW_ERROR);
+        }
+        return status;
+    }
+
+    @RequestMapping(value = "/userinfo/detail", method = RequestMethod.GET)
+    public ModelAndView userInfo(HttpSession session){
+        ModelAndView mav = new ModelAndView();
+        User user = (User)session.getAttribute("user");
+        if(user != null){
+            mav.setViewName("userDetail");
+            mav.addObject("user", user);
+        }else{
+            mav.setViewName("login");
+        }
+        return mav;
+    }
+
+    @RequestMapping(value = "/userinfo/change", method = RequestMethod.GET)
+    public ModelAndView changeUserInfo(HttpSession session){
+        ModelAndView mav = new ModelAndView();
+        User user = (User)session.getAttribute("user");
+        if(user != null){
+            mav.setViewName("changeUserInfo");
+            mav.addObject("user", user);
+        }else{
+            mav.setViewName("login");
+        }
+        return mav;
+    }
+
+    @RequestMapping(value = "/userinfo/update", method = RequestMethod.POST)
+    public Status updateUserInfo(String username, HttpSession session){
+        Status status = new Status();
+        User old_user = (User)session.getAttribute("user");
+        if(old_user != null){
+            old_user.setUsername(username);
+            User user = userService.update(old_user);
+            if(user != null){
+                session.setAttribute("user", user);
+                status.setStatus(StatusMsg.CHANGE_SUCCESS);
+            }else{
+                status.setStatus(StatusMsg.CHANGE_FAILED);
+            }
+        }else{
+            status.setStatus(StatusMsg.UNKNOW_ERROR);
         }
         return status;
     }

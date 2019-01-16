@@ -48,6 +48,14 @@ public interface UserService {
     boolean change_password(User user);
 
     /**
+     * 确认验证码
+     * @param user
+     * @return
+     */
+    boolean verify_code(User user);
+
+
+    /**
      * 更新用户信息
      * @param user
      * @return
