@@ -48,6 +48,13 @@ public interface UserService {
     boolean change_password(User user);
 
     /**
+     * 忘记密码
+     * @param user
+     * @return
+     */
+    boolean forget_password(User user);
+
+    /**
      * 确认验证码
      * @param user
      * @return
@@ -68,5 +75,6 @@ public interface UserService {
      * @return
      */
     User userInfo(User user);
+
 
 }

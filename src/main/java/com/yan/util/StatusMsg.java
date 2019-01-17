@@ -12,11 +12,13 @@ public class StatusMsg {
 
     public static final String EMAIL_USEABLE = "邮箱可用";
 
+    public static final String EMAIL_NOT_REG = "邮箱未注册";
+
     public static final String LOGIN_FAILED = "邮箱或密码错误";
 
     public static final String LOGIN_SUCCESS = "登录成功";
 
-    public static final String USER_NO_ACTIVE = "账号未激活";
+    public static final String USER_NOT_ACTIVE = "账号未激活";
 
     public static final String USER_LOCKED = "账号被锁定";
 

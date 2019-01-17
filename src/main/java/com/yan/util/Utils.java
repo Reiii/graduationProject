@@ -26,6 +26,8 @@ import java.util.Random;
  */
 
 public class Utils {
+
+    private static final String str = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String EMAIL_REGEX = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
     private static final String mail = "510602825@qq.com";
     private static final String Authorization_code = "mqprmgmmhdchbhgc";
@@ -93,5 +95,63 @@ public class Utils {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static String getActiveCode(){
+        StringBuilder sb = new StringBuilder();
+        Random rd = new Random();
+        for(int i = 0; i < 32; i++){
+            sb.append(str.charAt(rd.nextInt(62)));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 检测是否经过md5加密
+     *
+     * @param msg
+     * @return
+     */
+    public static boolean isValidMessageAudio(String msg) {
+        int cnt = 0;
+        for (int i = 0; i < msg.length(); ++i) {
+            switch (msg.charAt(i)) {
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                case 'a':
+                case 'b':
+                case 'c':
+                case 'd':
+                case 'e':
+                case 'f':
+                case 'A':
+                case 'B':
+                case 'C':
+                case 'D':
+                case 'E':
+                case 'F':
+                    ++cnt;
+                    if (32 <= cnt) return true;
+                    break;
+                case '/':
+                    if ((i + 10) < msg.length()) {// "/storage/"
+                        char ch1 = msg.charAt(i + 1);
+                        char ch2 = msg.charAt(i + 8);
+                        if ('/' == ch2 && ('s' == ch1 || 'S' == ch1)) return true;
+                    }
+                default:
+                    cnt = 0;
+                    break;
+            }
+        }
+        return false;
     }
 }

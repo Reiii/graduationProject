@@ -1,7 +1,5 @@
 package com.yan.domain;
 
-import com.yan.util.ActiveCode;
-
 import java.io.Serializable;
 import java.util.Date;
 

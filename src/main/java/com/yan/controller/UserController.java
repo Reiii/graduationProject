@@ -4,7 +4,7 @@ import com.yan.domain.User;
 import com.yan.service.UserService;
 import com.yan.util.Status;
 import com.yan.util.StatusMsg;
-import com.yan.util.Utils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +24,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 检查邮件是否已经注册
+     * @param email
+     * @return
+     */
     @RequestMapping(value = "/checkEmail", method = RequestMethod.GET)
     public Status check_email(String email){
         Status msg = new Status();
@@ -35,11 +40,22 @@ public class UserController {
         return msg;
     }
 
+    /**
+     * 跳转到注册页面
+     * @return
+     */
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public ModelAndView register(){
         return new ModelAndView("register");
     }
 
+    /**
+     * 注册
+     * @param email
+     * @param password
+     * @param username
+     * @return
+     */
     @RequestMapping(value = "/doReg", method = RequestMethod.POST)
     public Status doReg(String email, String password, String username){
         Status status = new Status();
@@ -52,6 +68,12 @@ public class UserController {
         return status;
     }
 
+    /**
+     * 激活账号
+     * @param uid
+     * @param code
+     * @return
+     */
     @RequestMapping(value = "/active", method = RequestMethod.GET)
     public Status doActive(String uid, String code){
         Status status = new Status();
@@ -66,6 +88,11 @@ public class UserController {
         return status;
     }
 
+    /**
+     * 跳转到登录页面,如果已经登录则跳转至商店
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(HttpSession session){
         User user = (User)session.getAttribute("user");
@@ -78,6 +105,13 @@ public class UserController {
         }
     }
 
+    /**
+     * 登录
+     * @param email
+     * @param password
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/doLogin", method = RequestMethod.POST)
     public Status doLogin(String email, String password, HttpSession session){
         Status status = new Status();
@@ -86,14 +120,53 @@ public class UserController {
         login.setPassword(password);
         User user = userService.login(login);
         if(user != null){
-            session.setAttribute("user", user);
-            status.setStatus(StatusMsg.LOGIN_SUCCESS);
+            if("0".equals(user.getStatus())){
+                status.setStatus(StatusMsg.USER_NOT_ACTIVE);
+            }else if("2".equals(user.getStatus())){
+                status.setStatus(StatusMsg.USER_LOCKED);
+            }else{
+                session.setAttribute("user", user);
+                status.setStatus(StatusMsg.LOGIN_SUCCESS);
+            }
         }else{
             status.setStatus(StatusMsg.LOGIN_FAILED);
         }
         return status;
     }
 
+    /**
+     * 跳转至忘记密码页
+     * @return
+     */
+    @RequestMapping(value = "/setPassword/forget", method = RequestMethod.GET)
+    public ModelAndView forget_password(){
+        return new ModelAndView("forgetPassword");
+    }
+
+    /**
+     * 忘记密码（发送验证邮件）
+     * @param email
+     * @return
+     */
+    @RequestMapping(value = "/setPassword/setEmail", method = RequestMethod.GET)
+    public Status setEmail(String email){
+        Status status = new Status();
+        if(userService.check_email(email)){
+            User user = new User();
+            user.setEmail(email);
+            userService.forget_password(user);
+            status.setStatus(StatusMsg.RESET_PASSWORD);
+        }else{
+            status.setStatus(StatusMsg.EMAIL_NOT_REG + "/" + StatusMsg.USER_NOT_ACTIVE);
+        }
+        return status;
+    }
+
+    /**
+     * 修改密码（发送验证邮件）
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/setPassword/change", method = RequestMethod.GET)
     public Status change_password(HttpSession session){
         Status status = new Status();
@@ -107,6 +180,13 @@ public class UserController {
         return status;
     }
 
+    /**
+     * 修改密码（检验验证码）
+     * @param uid
+     * @param code
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/setPassword/verify", method = RequestMethod.GET)
     public Status verify(String uid, String code, HttpSession session){
         Status status = new Status();
@@ -122,6 +202,11 @@ public class UserController {
         return status;
     }
 
+    /**
+     * 修改密码（跳转设置密码页）
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/setPassword/set", method = RequestMethod.GET)
     public ModelAndView setPasswordPage(HttpSession session){
         if(session.getAttribute("changePassword") != null){
@@ -131,6 +216,12 @@ public class UserController {
         }
     }
 
+    /**
+     * 修改密码（更新密码）
+     * @param password
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/setPassword/update", method = RequestMethod.POST)
     public Status updatePassword(String password, HttpSession session){
         Status status = new Status();
@@ -151,6 +242,11 @@ public class UserController {
         return status;
     }
 
+    /**
+     * 查看用户详细信息
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/userinfo/detail", method = RequestMethod.GET)
     public ModelAndView userInfo(HttpSession session){
         ModelAndView mav = new ModelAndView();
@@ -164,6 +260,11 @@ public class UserController {
         return mav;
     }
 
+    /**
+     * 跳转至修改用户信息页
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/userinfo/change", method = RequestMethod.GET)
     public ModelAndView changeUserInfo(HttpSession session){
         ModelAndView mav = new ModelAndView();
@@ -177,6 +278,12 @@ public class UserController {
         return mav;
     }
 
+    /**
+     * 更新用户信息
+     * @param username
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/userinfo/update", method = RequestMethod.POST)
     public Status updateUserInfo(String username, HttpSession session){
         Status status = new Status();
