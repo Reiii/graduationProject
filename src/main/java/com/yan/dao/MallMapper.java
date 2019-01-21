@@ -149,7 +149,30 @@ public interface MallMapper {
      * @param user
      * @return
      */
-    Toy[] selectFavoriteByUser(User user);
+    Favorite[] selectFavoriteByUser(User user);
 
+    /**
+     * 获得所有玩具
+     * @return
+     */
+    Toy[] selectAllToy();
 
+    /**
+     * 添加收藏夹
+     * @return
+     */
+    String addFavorite(Favorite favorite);
+
+    /**
+     * 删除收藏夹
+     * @return
+     */
+    String delFavorite(Favorite favorite);
+
+    /**
+     * 根据收藏id选择收藏夹
+     * @param favorite
+     * @return
+     */
+    Favorite selectFavoriteById(Favorite favorite);
 }

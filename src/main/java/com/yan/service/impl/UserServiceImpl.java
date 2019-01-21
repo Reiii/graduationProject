@@ -70,27 +70,44 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean change_password(User user) {
         User user_in_db = userMapper.selectById(user);
-        Utils.sendActive_Code(user_in_db, );
-
+        Utils.sendActive_Code(user_in_db, 1);
+        return true;
     }
 
     @Override
     public boolean forget_password(User user) {
-        return false;
+        User user_in_db = userMapper.selectUserByEmail(user);
+        if(user_in_db != null){
+            user_in_db.setActive_code(Utils.getActiveCode());
+            userMapper.update_user(user_in_db);
+            Utils.sendActive_Code(user_in_db, 1);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
     public boolean verify_code(User user) {
+        User user_in_db = userMapper.selectById(user);
+        if(user.getActive_code().equals(user_in_db.getActive_code())){
+            user_in_db.setActive_code("");
+            userMapper.update_user(user_in_db);
+            return true;
+        }
         return false;
     }
 
     @Override
     public User update(User user) {
-        return null;
+        userMapper.update_user(user);
+        User user_in_db = userMapper.selectById(user);
+        return user_in_db;
     }
 
     @Override
     public User userInfo(User user) {
-        return null;
+        User user_in_db = userMapper.selectById(user);
+        return user_in_db;
     }
 }

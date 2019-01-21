@@ -1,6 +1,7 @@
 package com.yan.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Package ：com.yan.domain
@@ -21,6 +22,20 @@ public class Theme_sticker implements Serializable {
     private String reply_num;
     private String views;
     private String status;
+
+    public Theme_sticker(){}
+
+    public Theme_sticker(String subject_id, String title, String uid, String classification){
+        this.subject_id = subject_id;
+        this.title = title;
+        this.uid = uid;
+        this.classification = classification;
+        this.time = String.valueOf(new Date().getTime());
+        this.type = "0";
+        this.reply_num = "0";
+        this.views = "0";
+        this.status = "0";
+    }
 
     public String getSubject_id() {
         return subject_id;

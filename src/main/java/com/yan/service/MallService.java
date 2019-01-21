@@ -1,9 +1,6 @@
 package com.yan.service;
 
-import com.yan.domain.Comment;
-import com.yan.domain.Order;
-import com.yan.domain.Toy;
-import com.yan.domain.User;
+import com.yan.domain.*;
 
 /**
  * Package ：com.yan.service
@@ -119,11 +116,11 @@ public interface MallService {
 
     /**
      * 删除收藏夹
-     * @param toy
+     * @param favorite
      * @param user
      * @return
      */
-    boolean delFavorite(Toy toy, User user);
+    boolean delFavorite(Favorite favorite, User user);
 
     /**
      * 添加订单

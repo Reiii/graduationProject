@@ -19,6 +19,7 @@ public class Order implements Serializable {
     private String buyer_phone;
     private String province;
     private String city;
+    private String address;
     private String status;
 
     public String getOrder_id() {
@@ -91,6 +92,14 @@ public class Order implements Serializable {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getStatus() {

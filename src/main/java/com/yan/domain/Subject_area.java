@@ -12,8 +12,17 @@ import java.io.Serializable;
 public class Subject_area implements Serializable {
     private String subject_id;
     private String name;
+    private String theme_num;
     private String post_num;
     private String last_post_time;
+
+    public Subject_area(){}
+
+    public Subject_area(String name){
+        this.name = name;
+        theme_num = "0";
+        post_num = "0";
+    }
 
     public String getSubject_id() {
         return subject_id;
@@ -29,6 +38,14 @@ public class Subject_area implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTheme_num() {
+        return theme_num;
+    }
+
+    public void setTheme_num(String theme_num) {
+        this.theme_num = theme_num;
     }
 
     public String getPost_num() {
