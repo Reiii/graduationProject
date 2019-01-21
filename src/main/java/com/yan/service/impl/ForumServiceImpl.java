@@ -7,7 +7,9 @@ import com.yan.domain.Theme_sticker;
 import com.yan.domain.User;
 import com.yan.service.ForumService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.context.Theme;
 
+import java.util.Date;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -73,9 +75,21 @@ public class ForumServiceImpl implements ForumService {
     @Override
     public Boolean addTheme_sticker(Theme_sticker theme_sticker, User user) {
         if("1".equals(user.getStatus())){
-            theme_sticker.setUid(user.getUid());
-            forumMapper.addThemeSticker(theme_sticker);
-            return true;
+            lock.writeLock().lock();
+            try{
+                theme_sticker.setUid(user.getUid());
+                forumMapper.addThemeSticker(theme_sticker);
+                Subject_area subject_area = new Subject_area();
+                subject_area.setSubject_id(theme_sticker.getSubject_id());
+                Subject_area area_in_db = forumMapper.selectSubjectAreaById(subject_area);
+                area_in_db.setTheme_num(String.valueOf(Integer.parseInt(area_in_db.getTheme_num()) + 1));
+                forumMapper.updateSubjectArea(area_in_db);
+                return true;
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }finally {
+                lock.writeLock().unlock();
+            }
         }
         return false;
     }
@@ -84,82 +98,187 @@ public class ForumServiceImpl implements ForumService {
     public Boolean delTheme_sticker(Theme_sticker theme_sticker, User user) {
         Theme_sticker theme_in_db = forumMapper.selectThemeStickerById(theme_sticker);
         if(theme_in_db.getUid().equals(user.getUid())){
-            for
+            lock.writeLock().lock();
+            try{
+                forumMapper.delThemeSticker(theme_sticker);
+                Subject_area subject_area = new Subject_area();
+                subject_area.setSubject_id(theme_sticker.getSubject_id());
+                Subject_area area_in_db = forumMapper.selectSubjectAreaById(subject_area);
+                area_in_db.setTheme_num(String.valueOf(Integer.parseInt(area_in_db.getTheme_num()) - 1));
+                forumMapper.updateSubjectArea(area_in_db);
+                return true;
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }finally {
+                lock.writeLock().unlock();
+            }
         }
+        return false;
     }
 
     @Override
     public Boolean updateTheme_sticker(Theme_sticker theme_sticker, User user) {
-        return null;
+        Theme_sticker theme_in_db = forumMapper.selectThemeStickerById(theme_sticker);
+        if(theme_in_db.getUid().equals(user.getUid())){
+            theme_in_db.setTitle(theme_sticker.getTitle());
+            theme_in_db.setClassification(theme_sticker.getClassification());
+            return true;
+        }
+        return false;
     }
 
     @Override
     public Theme_sticker getTheme_stickerById(String id) {
+        Theme_sticker theme_sticker = new Theme_sticker();
+        theme_sticker.setTheme_id(id);
+        lock.writeLock().lock();
+        try{
+            Theme_sticker sticker_in_db = forumMapper.selectThemeStickerById(theme_sticker);
+            sticker_in_db.setViews(String.valueOf(Integer.valueOf(sticker_in_db.getViews()) + 1));
+            forumMapper.updateThemeSticker(sticker_in_db);
+            return sticker_in_db;
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }finally {
+            lock.writeLock().unlock();
+        }
         return null;
     }
 
     @Override
     public Theme_sticker[] getTheme_stickersBySubject_id(String id) {
-        return new Theme_sticker[0];
+        Subject_area subject_area = new Subject_area();
+        subject_area.setSubject_id(id);
+        return forumMapper.selectThemeStickerBySubjectArea(subject_area);
     }
 
     @Override
     public Theme_sticker[] getTheme_stickerByTitle(String title) {
-        return new Theme_sticker[0];
+        Theme_sticker theme_sticker = new Theme_sticker();
+        theme_sticker.setTitle(title);
+        return forumMapper.selectThemeStickerByTitle(theme_sticker);
     }
 
     @Override
     public Theme_sticker[] getTheme_stickerByClassification(String classification, String subject_id) {
-        return new Theme_sticker[0];
+        Theme_sticker theme_sticker = new Theme_sticker();
+        theme_sticker.setSubject_id(subject_id);
+        theme_sticker.setClassification(classification);
+        return forumMapper.selectThemeStickerByTitle(theme_sticker);
     }
 
     @Override
     public Theme_sticker[] getTheme_stickerByUser(User user) {
-        return new Theme_sticker[0];
+        return forumMapper.selectThemeStickerByUser(user);
     }
 
     @Override
     public Theme_sticker[] getTheme_stickerByType(String type, String subject_id) {
-        return new Theme_sticker[0];
+        Theme_sticker theme_sticker = new Theme_sticker();
+        theme_sticker.setType(type);
+        theme_sticker.setSubject_id(subject_id);
+        return forumMapper.selectThemeStickerByTitle(theme_sticker);
     }
 
     @Override
     public Theme_sticker[] getTheme_stickerByStatus(String status) {
-        return new Theme_sticker[0];
+        Theme_sticker theme_sticker = new Theme_sticker();
+        theme_sticker.setStatus(status);
+        return forumMapper.selectThemeStickerByTitle(theme_sticker);
     }
 
     @Override
     public Boolean addPost(Post post, User user) {
-        return null;
+        if("1".equals(user.getStatus())){
+            post.setUid(user.getUid());
+            post.setTime(String.valueOf(new Date().getTime()));
+            post.setStatus("0");
+            forumMapper.addPost(post);
+            lock.writeLock().lock();
+            try{
+                Theme_sticker theme_sticker = new Theme_sticker();
+                theme_sticker.setSubject_id(post.getTheme_id());
+                Theme_sticker sticker_in_db = forumMapper.selectThemeStickerById(theme_sticker);
+                sticker_in_db.setReply_num(String.valueOf(Integer.valueOf(sticker_in_db.getReply_num()) + 1));
+                sticker_in_db.setLast_reply_time(String.valueOf(new Date().getTime()));
+                forumMapper.updateThemeSticker(sticker_in_db);
+                return true;
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }finally {
+                lock.writeLock().unlock();
+            }
+        }
+        return false;
     }
 
     @Override
     public Boolean delPost(Post post, User user) {
-        return null;
+        Post post_in_db = forumMapper.selectPostById(post);
+        if(post_in_db.getUid().equals(user.getUid())){
+            Theme_sticker theme_sticker = new Theme_sticker();
+            theme_sticker.setSubject_id(post_in_db.getTheme_id());
+            lock.writeLock().lock();
+            try{
+                forumMapper.delPost(post_in_db);
+                Theme_sticker sticker_in_db = forumMapper.selectThemeStickerById(theme_sticker);
+                sticker_in_db.setReply_num(String.valueOf(Integer.valueOf(sticker_in_db.getReply_num()) - 1));
+                forumMapper.updateThemeSticker(sticker_in_db);
+                return true;
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }finally {
+                lock.writeLock().unlock();
+            }
+        }
+        return false;
     }
 
     @Override
     public Boolean updatePost(Post post, User user) {
-        return null;
+        Post post_in_db = forumMapper.selectPostById(post);
+        if(post_in_db.getUid().equals(user.getUid())){
+            Theme_sticker theme_sticker = new Theme_sticker();
+            theme_sticker.setSubject_id(post_in_db.getTheme_id());
+            lock.writeLock().lock();
+            try{
+                post_in_db.setContent(post.getContent());
+                post_in_db.setTime(String.valueOf(new Date().getTime()));
+                forumMapper.updatePost(post_in_db);
+                Theme_sticker sticker_in_db = forumMapper.selectThemeStickerById(theme_sticker);
+                sticker_in_db.setLast_reply_time(String.valueOf(new Date().getTime()));
+                forumMapper.updateThemeSticker(sticker_in_db);
+                return true;
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }finally {
+                lock.writeLock().unlock();
+            }
+        }
+        return false;
     }
 
     @Override
     public Post getPostById(String id) {
-        return null;
+        Post post = new Post();
+        post.setPost_id(id);
+        return forumMapper.selectPostById(post);
     }
 
     @Override
     public Post[] getPostsByTheme_sticker(Theme_sticker sticker) {
-        return new Post[0];
+        return forumMapper.selectPostByThemeSticker(sticker);
     }
 
     @Override
     public Post[] getPostsByUser(User user) {
-        return new Post[0];
+        return forumMapper.selectPostByUser(user);
     }
 
     @Override
     public Post[] getPostsByStatus(String status) {
-        return new Post[0];
+        Post post = new Post();
+        post.setStatus(status);
+        return forumMapper.selectPostByStatus(post);
     }
 }

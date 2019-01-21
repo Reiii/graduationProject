@@ -98,6 +98,13 @@ public interface ForumMapper {
     Theme_sticker[] selectThemeStickerByUser(User user);
 
     /**
+     * 根据标题选择主题贴
+     * @param title
+     * @return
+     */
+    Theme_sticker[] selectThemeStickerByTitle(Theme_sticker title);
+
+    /**
      * 增加帖子
      * @param post
      * @return
@@ -138,5 +145,12 @@ public interface ForumMapper {
      * @return
      */
     Post[] selectPostByUser(User user);
+
+    /**
+     * 根据状态选择帖子
+     * @param post
+     * @return
+     */
+    Post[] selectPostByStatus(Post post);
 
 }
