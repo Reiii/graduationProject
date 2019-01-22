@@ -17,7 +17,7 @@ public interface ActivityService {
      * @param city_activity
      * @return
      */
-    Boolean addCity_activity(City_activity city_activity);
+    Boolean addCity_activity(City_activity city_activity, User user);
 
     /**
      * 删除同城活动
