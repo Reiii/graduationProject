@@ -1,6 +1,9 @@
 package com.yan.dao;
 
 import com.yan.domain.*;
+import com.yan.util.Page;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * Package ：com.yan.dao
@@ -8,7 +11,7 @@ import com.yan.domain.*;
  * date： 2019/1/7 下午3:36
  * author： Li KaiYan
  */
-
+@Mapper
 public interface MallMapper {
 
     /**
@@ -30,35 +33,35 @@ public interface MallMapper {
      * @param type
      * @return
      */
-    Toy[] selectToyByType(String type);
+    Toy[] selectToyByType(String type, String page);
 
     /**
      * 根据省份选择玩具
      * @param province
      * @return
      */
-    Toy[] selectToyByProvince(String province);
+    Toy[] selectToyByProvince(String province, String page);
 
     /**
      * 根据城市选择玩具
      * @param city
      * @return
      */
-    Toy[] selectToyByCity(String city);
+    Toy[] selectToyByCity(String city, String page);
 
     /**
      * 根据用户选择玩具
      * @param user
      * @return
      */
-    Toy[] selectToyByUser(User user);
+    Toy[] selectToyByUser(User user, String page);
 
     /**
      * 根据标题选择玩具
      * @param title
      * @return
      */
-    Toy[] selectToyByTitle(String title);
+    Toy[] selectToyByTitle(@Param("title") String title, @Param("page") String page);
 
     /**
      * 删除玩具
@@ -149,13 +152,29 @@ public interface MallMapper {
      * @param user
      * @return
      */
-    Favorite[] selectFavoriteByUser(User user);
+    Favorite[] selectFavoriteByUser(User user, Page page);
 
     /**
      * 获得所有玩具
      * @return
      */
-    Toy[] selectAllToy();
+    Toy[] selectAllToy(String start);
+
+    /**
+     * 计算玩具总量
+     * @return
+     */
+    int countAllToy();
+
+    int countToyByKeyword(String keyword);
+
+    int countToyByType(String type);
+
+    int countToyByProvince(String province);
+
+    int countToyByCity(String city);
+
+    int countToyByUser(User user);
 
     /**
      * 添加收藏夹

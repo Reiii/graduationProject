@@ -1,6 +1,8 @@
 package com.yan.service;
 
 import com.yan.domain.*;
+import com.yan.exception.MallException;
+import com.yan.util.Page;
 
 /**
  * Package ：com.yan.service
@@ -39,42 +41,42 @@ public interface MallService {
      * 获得所有玩具
      * @return
      */
-    Toy[] getAllToys();
+    Page<Toy> getAllToys(String page) throws MallException;
 
     /**
      * 搜索关键字获得玩具
      * @param keyword
      * @return
      */
-    Toy[] getToysByKeyword(String keyword);
+    Page<Toy> getToysByKeyword(String keyword, String page) throws MallException;
 
     /**
      *  根据类别获得玩具
      * @param type
      * @return
      */
-    Toy[] getToysByType(String type);
+    Page<Toy> getToysByType(String type, String page) throws MallException;
 
     /**
      * 根据省份获得玩具
      * @param province
      * @return
      */
-    Toy[] getToysByProvince(String province);
+    Page<Toy> getToysByProvince(String province, String page) throws MallException;
 
     /**
      * 根据城市获得玩具
      * @param city
      * @return
      */
-    Toy[] getToysByCity(String city);
+    Page<Toy> getToysByCity(String city, String page) throws MallException;
 
     /**
      * 根据用户获得玩具
      * @param user
      * @return
      */
-    Toy[] getToysByUser(User user);
+    Page<Toy> getToysByUser(User user, String page) throws MallException;
 
     /**
      * 获取玩具信息

@@ -14,9 +14,12 @@ public class Page<T> {
     private int currentPage;
     private int startPage;
     private int endPage;
-    private int totalPage;
+    private int size;
     private List<T> data;
 
+    public Page(){
+        this.size = DEFAULT_SIZE;
+    }
 
     public int getCurrentPage() {
         return currentPage;
@@ -42,12 +45,12 @@ public class Page<T> {
         this.endPage = endPage;
     }
 
-    public int getTotalPage() {
-        return totalPage;
+    public int getSize() {
+        return size;
     }
 
-    public void setTotalPage(int totalPage) {
-        this.totalPage = totalPage;
+    public void setSize(int size) {
+        this.size = size;
     }
 
     public List<T> getData() {

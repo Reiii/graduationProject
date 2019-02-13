@@ -1,11 +1,14 @@
 package com.yan.controller;
 
+import com.yan.constant.loginRequire;
 import com.yan.domain.User;
-import com.yan.service.UserService;
+import com.yan.service.impl.UserServiceImpl;
 import com.yan.util.Status;
 import com.yan.util.StatusMsg;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,10 +22,11 @@ import javax.servlet.http.HttpSession;
  * date： 2019/1/15 下午9:59
  * author： Li KaiYan
  */
-@RestController(value = "/user")
+@RestController
+@RequestMapping("/user")
 public class UserController {
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     /**
      * 检查邮件是否已经注册
@@ -30,7 +34,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/checkEmail", method = RequestMethod.GET)
-    public Status check_email(String email){
+    public Status check_email(@Param("email") String email){
         Status msg = new Status();
         if(userService.check_email(email)){
             msg.setStatus(StatusMsg.EMAIL_USEABLE);
@@ -57,7 +61,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/doReg", method = RequestMethod.POST)
-    public Status doReg(String email, String password, String username){
+    public Status doReg(@Param("email") String email, @Param("password") String password, @Param("username") String username){
         Status status = new Status();
         User user = new User(email, username, password);
         if(userService.register(user)){
@@ -113,7 +117,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/doLogin", method = RequestMethod.POST)
-    public Status doLogin(String email, String password, HttpSession session){
+    public Status doLogin(@Param("email") String email, @Param("password") String password, HttpSession session){
         Status status = new Status();
         User login = new User();
         login.setEmail(email);
@@ -223,6 +227,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/setPassword/update", method = RequestMethod.POST)
+    @loginRequire
     public Status updatePassword(String password, HttpSession session){
         Status status = new Status();
         String uid = (String)session.getAttribute("changePassword");
@@ -248,15 +253,12 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/userinfo/detail", method = RequestMethod.GET)
+    @loginRequire
     public ModelAndView userInfo(HttpSession session){
         ModelAndView mav = new ModelAndView();
         User user = (User)session.getAttribute("user");
-        if(user != null){
-            mav.setViewName("userDetail");
-            mav.addObject("user", user);
-        }else{
-            mav.setViewName("login");
-        }
+        mav.setViewName("userDetail");
+        mav.addObject("user", user);
         return mav;
     }
 
@@ -266,15 +268,12 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/userinfo/change", method = RequestMethod.GET)
+    @loginRequire
     public ModelAndView changeUserInfo(HttpSession session){
         ModelAndView mav = new ModelAndView();
         User user = (User)session.getAttribute("user");
-        if(user != null){
-            mav.setViewName("changeUserInfo");
-            mav.addObject("user", user);
-        }else{
-            mav.setViewName("login");
-        }
+        mav.setViewName("changeUserInfo");
+        mav.addObject("user", user);
         return mav;
     }
 
@@ -285,20 +284,15 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/userinfo/update", method = RequestMethod.POST)
+    @loginRequire
     public Status updateUserInfo(String username, HttpSession session){
         Status status = new Status();
         User old_user = (User)session.getAttribute("user");
-        if(old_user != null){
-            old_user.setUsername(username);
-            User user = userService.update(old_user);
-            if(user != null){
-                session.setAttribute("user", user);
-                status.setStatus(StatusMsg.CHANGE_SUCCESS);
-            }else{
-                status.setStatus(StatusMsg.CHANGE_FAILED);
-            }
-        }else{
-            status.setStatus(StatusMsg.UNKNOW_ERROR);
+        old_user.setUsername(username);
+        User user = userService.update(old_user);
+        if(user != null){
+            session.setAttribute("user", user);
+            status.setStatus(StatusMsg.CHANGE_SUCCESS);
         }
         return status;
     }

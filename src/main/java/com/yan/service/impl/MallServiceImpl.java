@@ -2,10 +2,16 @@ package com.yan.service.impl;
 
 import com.yan.dao.MallMapper;
 import com.yan.domain.*;
+import com.yan.exception.MallException;
 import com.yan.service.MallService;
+import com.yan.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Package ：com.yan.service.impl
@@ -13,11 +19,11 @@ import java.util.Date;
  * date： 2019/1/20 上午11:16
  * author： Li KaiYan
  */
-
-public class MallServiceImpl implements MallService {
+@Service
+public class MallServiceImpl implements MallService{
 
     @Autowired
-    MallMapper mallMapper;
+    private MallMapper mallMapper;
 
     @Override
     public boolean addToy(Toy toy, User user) {
@@ -49,33 +55,99 @@ public class MallServiceImpl implements MallService {
     }
 
     @Override
-    public Toy[] getAllToys() {
-        return mallMapper.selectAllToy();
+    public Page getAllToys(String page) throws MallException{
+        int total = mallMapper.countAllToy();
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new MallException(MallException.PAGE_OVER_LIMIT);
+        }
+        Toy[] toys = mallMapper.selectAllToy(String.valueOf((Integer.parseInt(page) - 1) * 20));
+        Page<Toy> toyPage = new Page<>();
+        toyPage.setCurrentPage(Integer.parseInt(page));
+        toyPage.setStartPage(1);
+        toyPage.setEndPage(total_page);
+        toyPage.setData(Arrays.asList(toys));
+        return toyPage;
     }
 
     @Override
-    public Toy[] getToysByKeyword(String keyword) {
-        return mallMapper.selectToyByTitle(keyword);
+    public Page<Toy> getToysByKeyword(String keyword, String page) throws MallException{
+        int total = mallMapper.countToyByKeyword(keyword);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new MallException(MallException.PAGE_OVER_LIMIT);
+        }
+        Toy[] toys = mallMapper.selectToyByTitle(keyword, String.valueOf((Integer.parseInt(page) - 1) * 20));
+        Page<Toy> toyPage = new Page<>();
+        toyPage.setCurrentPage(Integer.parseInt(page));
+        toyPage.setStartPage(1);
+        toyPage.setEndPage(total_page);
+        toyPage.setData(Arrays.asList(toys));
+        return toyPage;
     }
 
     @Override
-    public Toy[] getToysByType(String type) {
-        return mallMapper.selectToyByType(type);
+    public Page<Toy> getToysByType(String type, String page) throws MallException {
+        int total = mallMapper.countToyByType(type);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new MallException(MallException.PAGE_OVER_LIMIT);
+        }
+        Toy[] toys = mallMapper.selectToyByType(type, String.valueOf((Integer.parseInt(page) - 1) * 20));
+        Page<Toy> toyPage = new Page<>();
+        toyPage.setCurrentPage(Integer.parseInt(page));
+        toyPage.setStartPage(1);
+        toyPage.setEndPage(total_page);
+        toyPage.setData(Arrays.asList(toys));
+        return toyPage;
     }
 
     @Override
-    public Toy[] getToysByProvince(String province) {
-        return mallMapper.selectToyByProvince(province);
+    public Page<Toy> getToysByProvince(String province, String page) throws MallException {
+        int total = mallMapper.countToyByProvince(province);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new MallException(MallException.PAGE_OVER_LIMIT);
+        }
+        Toy[] toys = mallMapper.selectToyByProvince(province, String.valueOf((Integer.parseInt(page) - 1) * 20));
+        Page<Toy> toyPage = new Page<>();
+        toyPage.setCurrentPage(Integer.parseInt(page));
+        toyPage.setStartPage(1);
+        toyPage.setEndPage(total_page);
+        toyPage.setData(Arrays.asList(toys));
+        return toyPage;
     }
 
     @Override
-    public Toy[] getToysByCity(String city) {
-        return mallMapper.selectToyByCity(city);
+    public Page<Toy> getToysByCity(String city, String page) throws MallException {
+        int total = mallMapper.countToyByCity(city);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new MallException(MallException.PAGE_OVER_LIMIT);
+        }
+        Toy[] toys = mallMapper.selectToyByCity(city, String.valueOf((Integer.parseInt(page) - 1) * 20));
+        Page<Toy> toyPage = new Page<>();
+        toyPage.setCurrentPage(Integer.parseInt(page));
+        toyPage.setStartPage(1);
+        toyPage.setEndPage(total_page);
+        toyPage.setData(Arrays.asList(toys));
+        return toyPage;
     }
 
     @Override
-    public Toy[] getToysByUser(User user) {
-        return mallMapper.selectToyByUser(user);
+    public Page<Toy> getToysByUser(User user, String page) throws MallException{
+        int total = mallMapper.countToyByUser(user);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new MallException(MallException.PAGE_OVER_LIMIT);
+        }
+        Toy[] toys = mallMapper.selectToyByUser(user, String.valueOf((Integer.parseInt(page) - 1) * 20));
+        Page<Toy> toyPage = new Page<>();
+        toyPage.setCurrentPage(Integer.parseInt(page));
+        toyPage.setStartPage(1);
+        toyPage.setEndPage(total_page);
+        toyPage.setData(Arrays.asList(toys));
+        return toyPage;
     }
 
     @Override

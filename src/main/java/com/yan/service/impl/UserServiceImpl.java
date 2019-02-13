@@ -5,6 +5,7 @@ import com.yan.domain.User;
 import com.yan.service.UserService;
 import com.yan.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Package ：com.yan.service.impl
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * date： 2019/1/17 下午11:11
  * author： Li KaiYan
  */
-
+@Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
@@ -21,7 +22,8 @@ public class UserServiceImpl implements UserService {
     public boolean check_email(String email) {
         User user = new User();
         user.setEmail(email);
-        if(userMapper.selectUserByEmail(user) != null){
+        User user_in_db = userMapper.selectUserByEmail(user);
+        if(user_in_db != null){
             return false;
         }else{
             return true;
@@ -31,9 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean register(User user) {
         if(Utils.isEmail(user.getEmail()) && Utils.isValidMessageAudio(user.getPassword())){
-            String uid = userMapper.addUser(user);
-            user.setUid(uid);
-            user = userMapper.selectById(user);
+            userMapper.addUser(user);
             user.setActive_code(Utils.getActiveCode());
             userMapper.update_user(user);
             Utils.sendActive_Code(user, 0);
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean active(User user) {
         User user_in_db = userMapper.selectById(user);
-        if("0".equals(user_in_db) && user_in_db.getActive_code().equals(user.getActive_code())){
+        if("0".equals(user_in_db.getStatus()) && user_in_db.getActive_code().equals(user.getActive_code())){
             user_in_db.setActive_code("");
             user_in_db.setStatus("1");
             userMapper.update_user(user_in_db);
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(User user) {
-        User user_in_db = userMapper.selectById(user);
+        User user_in_db = userMapper.selectUserByEmail(user);
         if(user_in_db != null && user_in_db.getPassword().equals(user.getPassword())){
             return user_in_db;
         }else{

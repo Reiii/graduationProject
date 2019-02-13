@@ -1,5 +1,7 @@
 package com.yan.domain;
 
+import com.yan.util.Utils;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -34,7 +36,7 @@ public class User implements Serializable {
         integral = "0";
         credit = "0";
         reg_time = String.valueOf(new Date().getTime());
-        active_code = ActiveCode.getActiveCode();
+        active_code = Utils.getActiveCode();
         type = "1";
         status = "0";
     }

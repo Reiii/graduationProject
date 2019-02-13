@@ -1,6 +1,7 @@
 package com.yan.dao;
 
 import com.yan.domain.User;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -9,7 +10,7 @@ import org.apache.ibatis.annotations.Param;
  * date： 2019/1/7 下午1:38
  * author： Li KaiYan
  */
-
+@Mapper
 public interface UserMapper {
 
     /**
@@ -17,7 +18,7 @@ public interface UserMapper {
      * @param user
      * @return
      */
-    String addUser(User user);
+    int addUser(User user);
 
     /**
      * 根据id选择用户
@@ -38,6 +39,6 @@ public interface UserMapper {
      * @param user
      * @return
      */
-    String update_user(User user);
+    int update_user(User user);
 
 }
