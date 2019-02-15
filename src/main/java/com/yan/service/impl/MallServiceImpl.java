@@ -61,7 +61,7 @@ public class MallServiceImpl implements MallService{
         if(Integer.parseInt(page) > total_page){
             throw new MallException(MallException.PAGE_OVER_LIMIT);
         }
-        Toy[] toys = mallMapper.selectAllToy(String.valueOf((Integer.parseInt(page) - 1) * 20));
+        Toy[] toys = mallMapper.selectAllToy((Integer.parseInt(page) - 1) * 20);
         Page<Toy> toyPage = new Page<>();
         toyPage.setCurrentPage(Integer.parseInt(page));
         toyPage.setStartPage(1);
@@ -74,10 +74,10 @@ public class MallServiceImpl implements MallService{
     public Page<Toy> getToysByKeyword(String keyword, String page) throws MallException{
         int total = mallMapper.countToyByKeyword(keyword);
         int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
-        if(Integer.parseInt(page) > total_page){
+        if(Integer.parseInt(page) > total_page && total_page != 0){
             throw new MallException(MallException.PAGE_OVER_LIMIT);
         }
-        Toy[] toys = mallMapper.selectToyByTitle(keyword, String.valueOf((Integer.parseInt(page) - 1) * 20));
+        Toy[] toys = mallMapper.selectToyByTitle(keyword, (Integer.parseInt(page) - 1) * 20);
         Page<Toy> toyPage = new Page<>();
         toyPage.setCurrentPage(Integer.parseInt(page));
         toyPage.setStartPage(1);
@@ -198,7 +198,7 @@ public class MallServiceImpl implements MallService{
     @Override
     public synchronized boolean addOrder(Order order, User user) {
         Toy toy = new Toy();
-        toy.setCommdity_id(order.getCommdity_id());
+        toy.setCommodity_id(order.getCommdity_id());
         Toy toy_in_db = mallMapper.selectToyById(toy);
         if(toy_in_db.getStatus().equals("1") || toy_in_db.getStatus().equals("2")){
             return false;
@@ -248,5 +248,23 @@ public class MallServiceImpl implements MallService{
             return order_in_db;
         }
         return null;
+    }
+
+    @Override
+    public Picture getCover(Toy toy){
+        Picture pic = mallMapper.selectPictureByCommodity_id(toy);
+        return pic;
+    }
+
+    @Override
+    public Pictures getPictures(Toy toy) {
+        Pictures pics  = mallMapper.selectPicturesByCommodity_id(toy);
+        return pics;
+    }
+
+    @Override
+    public User getUserByToy(Toy toy) {
+        User seller = mallMapper.selectUserByToy(toy);
+        return seller;
     }
 }

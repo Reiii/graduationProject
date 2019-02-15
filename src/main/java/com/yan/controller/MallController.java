@@ -1,5 +1,6 @@
 package com.yan.controller;
 
+import com.yan.domain.Picture;
 import com.yan.domain.Toy;
 import com.yan.domain.User;
 import com.yan.exception.MallException;
@@ -23,16 +24,15 @@ import javax.servlet.http.HttpSession;
  * author： Li KaiYan
  */
 
-@RequestMapping(value = "/mall")
 @RestController
+@RequestMapping(value = "/mall")
 public class MallController {
     @Autowired
     private MallServiceImpl mallService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView homePage(HttpSession session) throws MallException {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("mall");
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
+    public ModelAndView homePage() throws MallException {
+        ModelAndView mav = new ModelAndView("mall");
         return mav;
     }
 
@@ -46,6 +46,48 @@ public class MallController {
             itemPage = mallService.getToysByKeyword(keyword, page);
         }
         return itemPage;
+    }
+
+    @RequestMapping(value = "/item", method = RequestMethod.GET)
+    public ModelAndView ToyDetail(@Param("commodity_id") String commodity_id, HttpSession session){
+        session.setAttribute("viewItem", commodity_id);
+        ModelAndView mav = new ModelAndView("item");
+        return mav;
+    }
+
+    @RequestMapping(value = "/getSeller", method = RequestMethod.GET)
+    public User getSeller(HttpSession session){
+        String commodity_id = (String)session.getAttribute("viewItem");
+        if(commodity_id != null){
+            Toy toy = new Toy();
+            toy.setCommodity_id(commodity_id);
+            User seller = mallService.getUserByToy(toy);
+            return seller;
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/getToyInfo", method = RequestMethod.GET)
+    public Toy getToyInfo(HttpSession session){
+        String commodity_id = (String)session.getAttribute("viewItem");
+        if(commodity_id != null){
+            Toy toy = new Toy();
+            toy.setCommodity_id(commodity_id);
+            Toy toy_in_db = mallService.toyInfo(toy);
+            return toy_in_db;
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/getComment", method = RequestMethod.GET)
+    public
+
+    @RequestMapping(value = "/cover", method = RequestMethod.GET)
+    public Picture ToyCover(@Param("commodity_id") String commodity_id){
+        Toy toy = new Toy();
+        toy.setCommodity_id(commodity_id);
+        Picture cover = mallService.getCover(toy);
+        return cover;
     }
 
 

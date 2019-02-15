@@ -61,7 +61,7 @@ public interface MallMapper {
      * @param title
      * @return
      */
-    Toy[] selectToyByTitle(@Param("title") String title, @Param("page") String page);
+    Toy[] selectToyByTitle(@Param("title") String title, @Param("start") int start);
 
     /**
      * 删除玩具
@@ -158,7 +158,7 @@ public interface MallMapper {
      * 获得所有玩具
      * @return
      */
-    Toy[] selectAllToy(String start);
+    Toy[] selectAllToy(@Param("start") int start);
 
     /**
      * 计算玩具总量
@@ -166,14 +166,39 @@ public interface MallMapper {
      */
     int countAllToy();
 
+    /**
+     * 根据关键字计算总量
+     * @param keyword
+     * @return
+     */
     int countToyByKeyword(String keyword);
 
+    /**
+     * 根据类型计算总量
+     * @param type
+     * @return
+     */
     int countToyByType(String type);
 
+    /**
+     * 根据省份计算总量
+     * @param province
+     * @return
+     */
     int countToyByProvince(String province);
 
+    /**
+     * 根据城市计算总量
+     * @param city
+     * @return
+     */
     int countToyByCity(String city);
 
+    /**
+     * 根据用具计算总量
+     * @param user
+     * @return
+     */
     int countToyByUser(User user);
 
     /**
@@ -194,4 +219,25 @@ public interface MallMapper {
      * @return
      */
     Favorite selectFavoriteById(Favorite favorite);
+
+    /**
+     * 根据玩具id获取图片（获取一张 封面）
+     * @param toy
+     * @return
+     */
+    Picture selectPictureByCommodity_id(Toy toy);
+
+    /**
+     * 根据玩具id获取图片 多张
+     * @param toy
+     * @return
+     */
+    Pictures selectPicturesByCommodity_id(Toy toy);
+
+    /**
+     * 根据玩具选择用户
+     * @param toy
+     * @return
+     */
+    User selectUserByToy(Toy toy);
 }

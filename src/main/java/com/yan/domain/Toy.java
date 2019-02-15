@@ -1,6 +1,7 @@
 package com.yan.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * Package ：com.yan.domain
@@ -10,22 +11,22 @@ import java.io.Serializable;
  */
 
 public class Toy implements Serializable {
-    private String commdity_id;
+    private String commodity_id;
     private String uid;
     private String title;
     private String description;
-    private String type;
+    private BigDecimal price;
     private String means_of_transction;
     private String province;
     private String city;
     private String status;
 
-    public String getCommdity_id() {
-        return commdity_id;
+    public String getCommodity_id() {
+        return commodity_id;
     }
 
-    public void setCommdity_id(String commdity_id) {
-        this.commdity_id = commdity_id;
+    public void setCommodity_id(String commdity_id) {
+        this.commodity_id = commdity_id;
     }
 
     public String getUid() {
@@ -52,12 +53,12 @@ public class Toy implements Serializable {
         this.description = description;
     }
 
-    public String getType() {
-        return type;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public String getMeans_of_transction() {

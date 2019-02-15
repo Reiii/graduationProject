@@ -1,6 +1,7 @@
 package com.yan.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Package ：com.yan.domain
@@ -11,7 +12,7 @@ import java.io.Serializable;
 
 public class Pictures implements Serializable {
     private String commodity_id;
-    private Picture[] pictures;
+    private List<Picture> pictures;
 
     public String getCommodity_id() {
         return commodity_id;
@@ -21,11 +22,11 @@ public class Pictures implements Serializable {
         this.commodity_id = commodity_id;
     }
 
-    public Picture[] getPictures() {
+    public List<Picture> getPictures() {
         return pictures;
     }
 
-    public void setPictures(Picture[] pictures) {
+    public void setPictures(List<Picture> pictures) {
         this.pictures = pictures;
     }
 }

@@ -1,5 +1,6 @@
 package com.yan.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yan.util.Utils;
 
 import java.io.Serializable;
@@ -16,11 +17,13 @@ public class User implements Serializable {
     private String uid;
     private String email;
     private String username;
+    @JsonIgnore
     private String password;
     private String integral;
     private String credit;
     private String reg_time;
     private String last_login_time;
+    @JsonIgnore
     private String active_code;
     private String type;
     private String status;

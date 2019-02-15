@@ -162,6 +162,26 @@ public interface MallService {
      */
     Order orderInfo(Order order, User user);
 
+    /**
+     * 获取商品封面
+     * @param toy
+     * @return
+     */
+    Picture getCover(Toy toy);
+
+    /**
+     * 获取商品全部图片
+     * @param toy
+     * @return
+     */
+    Pictures getPictures(Toy toy);
+
+    /**
+     * 根据玩具选择用户
+     * @param toy
+     * @return
+     */
+    User getUserByToy(Toy toy);
 
 
 }

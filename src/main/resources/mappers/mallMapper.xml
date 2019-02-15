@@ -3,5 +3,23 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yan.dao.MallMapper">
+    <select id="selectAllToy" resultType="com.yan.domain.Toy">
+        select * from toy limit #{start}, 20
+    </select>
+    
+    <select id="selectPictureByCommodity_id" resultType="com.yan.domain.Picture" parameterType="com.yan.domain.Toy">
+        select * from picture where commodity_id = #{commodity_id}
+    </select>
+    
+    <select id="countAllToy" resultType="java.lang.Integer">
+        select count(*) from toy
+    </select>
+    
+    <select id="countToyByKeyword" resultType="java.lang.Integer">
+      select count(*) from toy where title like "%"#{keyword}"%"
+    </select>
 
+    <select id="selectToyByTitle" resultType="com.yan.domain.Toy">
+        select * from toy where title like "%"#{title}"%" limit #{start}, 20
+    </select>
 </mapper>
