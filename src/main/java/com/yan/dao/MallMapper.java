@@ -232,7 +232,7 @@ public interface MallMapper {
      * @param toy
      * @return
      */
-    Pictures selectPicturesByCommodity_id(Toy toy);
+    Picture[] selectPicturesByCommodity_id(Toy toy);
 
     /**
      * 根据玩具选择用户

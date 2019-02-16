@@ -172,8 +172,11 @@ public class MallServiceImpl implements MallService{
     }
 
     @Override
-    public Comment[] getComment(Toy toy) {
-        return mallMapper.selectCommentByToy(toy);
+    public Comments getComments(Toy toy) {
+        Comment[] comments = mallMapper.selectCommentByToy(toy);
+        Comments commentlist = new Comments();
+        commentlist.setComments(Arrays.asList(comments));
+        return commentlist;
     }
 
     @Override
@@ -196,7 +199,7 @@ public class MallServiceImpl implements MallService{
     }
 
     @Override
-    public synchronized boolean addOrder(Order order, User user) {
+    public synchronized boolean addOrder(Order order) {
         Toy toy = new Toy();
         toy.setCommodity_id(order.getCommdity_id());
         Toy toy_in_db = mallMapper.selectToyById(toy);
@@ -204,6 +207,7 @@ public class MallServiceImpl implements MallService{
             return false;
         }else{
             order.setSeller_id(toy_in_db.getUid());
+            order.setPrice(toy_in_db.getPrice());
             order.setOrder_time(String.valueOf(new Date().getTime()));
             mallMapper.addOrder(order);
             return true;
@@ -258,8 +262,10 @@ public class MallServiceImpl implements MallService{
 
     @Override
     public Pictures getPictures(Toy toy) {
-        Pictures pics  = mallMapper.selectPicturesByCommodity_id(toy);
-        return pics;
+        Pictures pictures = new Pictures();
+        Picture[] pics  = mallMapper.selectPicturesByCommodity_id(toy);
+        pictures.setPictures(Arrays.asList(pics));
+        return pictures;
     }
 
     @Override

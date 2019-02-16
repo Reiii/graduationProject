@@ -61,13 +61,15 @@
             <br>
             <br>
             <div class="item-list">
-                <a v-for="i in items" class="item" >
-                    <div class="item-img">
-                        <img src="/cover/1.jpg">
-                    </div>
-                    <div class="item-title">{{ i.title }}</div>
-                    <div class="item-price"><font color="red" size="4">¥ {{ i.price}}</font></div>
+                <span v-for="i in items">
+                    <a class="item" @click="handleHrefClick(i.commodity_id)">
+                        <div class="item-img">
+                            <img v-bind:id="i.commodity_id" v-bind:src="getCover(i.commodity_id)">
+                        </div>
+                        <div class="item-title">{{ i.title }}</div>
+                        <div class="item-price"><font color="red" size="4">¥ {{ i.price }}</font></div>
                 </a>
+                </span>
             </div>
         </el-main>
         <el-footer>
@@ -159,10 +161,8 @@
                     params:{
                         commodity_id: commodity_id
 					}
-				})
-                        .then((response) => {
-                    var url = response.data.url;
-                return url;
+				}).then((response) => {
+                    document.getElementById(commodity_id).src=response.data.url;
             })
             .catch(function(error){
                     console.log("error in loading cover.")
@@ -170,7 +170,10 @@
             },
 			handleCurrentChange(val){
                 this.handlePage(val);
-			}
+			},
+			handleHrefClick(id){
+                location.href="http://localhost:8080/mall/item?commodity_id=" + id;
+            }
         }
     })
 </script>

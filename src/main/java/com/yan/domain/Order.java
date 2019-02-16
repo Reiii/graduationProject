@@ -1,6 +1,7 @@
 package com.yan.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * Package ：com.yan.domain
@@ -15,10 +16,11 @@ public class Order implements Serializable {
     private String seller_id;
     private String commdity_id;
     private String order_time;
-    private String price;
+    private BigDecimal price;
     private String buyer_phone;
     private String province;
     private String city;
+    private String district;
     private String address;
     private String status;
 
@@ -62,11 +64,11 @@ public class Order implements Serializable {
         this.order_time = order_time;
     }
 
-    public String getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -92,6 +94,14 @@ public class Order implements Serializable {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 
     public String getAddress() {

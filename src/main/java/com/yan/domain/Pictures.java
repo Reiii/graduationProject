@@ -11,16 +11,7 @@ import java.util.List;
  */
 
 public class Pictures implements Serializable {
-    private String commodity_id;
     private List<Picture> pictures;
-
-    public String getCommodity_id() {
-        return commodity_id;
-    }
-
-    public void setCommodity_id(String commodity_id) {
-        this.commodity_id = commodity_id;
-    }
 
     public List<Picture> getPictures() {
         return pictures;

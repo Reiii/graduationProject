@@ -1,12 +1,14 @@
 package com.yan.controller;
 
-import com.yan.domain.Picture;
-import com.yan.domain.Toy;
-import com.yan.domain.User;
+import com.yan.constant.loginRequire;
+import com.yan.domain.*;
 import com.yan.exception.MallException;
 import com.yan.service.MallService;
 import com.yan.service.impl.MallServiceImpl;
+import com.yan.service.impl.UserServiceImpl;
 import com.yan.util.Page;
+import com.yan.util.Status;
+import com.yan.util.StatusMsg;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +31,8 @@ import javax.servlet.http.HttpSession;
 public class MallController {
     @Autowired
     private MallServiceImpl mallService;
+    @Autowired
+    private UserServiceImpl userService;
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public ModelAndView homePage() throws MallException {
@@ -80,7 +84,36 @@ public class MallController {
     }
 
     @RequestMapping(value = "/getComment", method = RequestMethod.GET)
-    public
+    public Comments getComments(HttpSession session){
+        String commodity_id = (String)session.getAttribute("viewItem");
+        if(commodity_id != null){
+            Toy toy = new Toy();
+            toy.setCommodity_id(commodity_id);
+            Comments comments = mallService.getComments(toy);
+            return comments;
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
+    public User getUserInfo(@RequestParam("uid") String uid){
+        User user = new User();
+        user.setUid(uid);
+        User user_in_db = userService.userInfo(user);
+        return user_in_db;
+    }
+
+    @RequestMapping(value = "/getToyPic", method = RequestMethod.GET)
+    public Pictures getToyPic(HttpSession session){
+        String commodity_id = (String)session.getAttribute("viewItem");
+        if(commodity_id != null){
+            Toy toy = new Toy();
+            toy.setCommodity_id(commodity_id);
+            Pictures pics = mallService.getPictures(toy);
+            return pics;
+        }
+        return null;
+    }
 
     @RequestMapping(value = "/cover", method = RequestMethod.GET)
     public Picture ToyCover(@Param("commodity_id") String commodity_id){
@@ -90,5 +123,47 @@ public class MallController {
         return cover;
     }
 
+    @loginRequire
+    @RequestMapping(value = "/doBuy", method = RequestMethod.GET)
+    public ModelAndView doBuy(@RequestParam("commodity_id") String commodity_id, HttpSession session){
+        session.setAttribute("buyItem", commodity_id);
+        ModelAndView mav = new ModelAndView("confirmOrder");
+        return mav;
+    }
+
+    @loginRequire
+    @RequestMapping(value = "/getBuyItem", method = RequestMethod.GET)
+    public Toy getBuyItem(HttpSession session){
+        String commodity_id = (String)session.getAttribute("buyItem");
+        if(commodity_id != null){
+            Toy toy = new Toy();
+            toy.setCommodity_id(commodity_id);
+            Toy toy_in_db = mallService.toyInfo(toy);
+            return toy_in_db;
+        }
+        return null;
+    }
+
+    @loginRequire
+    @RequestMapping(value = "/submitOrder", method = RequestMethod.POST)
+    public Status submitOrder(HttpSession session, @RequestParam("buyer_phone") String phone, @RequestParam("province") String province, @RequestParam("city") String city, @RequestParam("district") String district, @RequestParam("address") String address){
+        String buyer_id = ((User)session.getAttribute("user")).getUid();
+        String commodity_id = (String)session.getAttribute("buyItem");
+        Order order = new Order();
+        order.setBuyer_id(buyer_id);
+        order.setCommdity_id(commodity_id);
+        order.setBuyer_phone(phone);
+        order.setProvince(province);
+        order.setCity(city);
+        order.setDistrict(district);
+        order.setAddress(address);
+        order.setStatus("0");
+        boolean isSuccess = mallService.addOrder(order);
+        if(isSuccess){
+            return new Status(StatusMsg.ORDER_SUCCESS);
+        }else{
+            return new Status(StatusMsg.ORDER_FAILED);
+        }
+    }
 
 }

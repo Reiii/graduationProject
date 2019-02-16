@@ -12,6 +12,12 @@ import java.io.Serializable;
 public class Status implements Serializable {
     private String msg;
 
+    public Status(){};
+
+    public Status(String msg){
+        this.msg = msg;
+    }
+
     public String getStatus() {
         return msg;
     }

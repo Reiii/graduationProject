@@ -44,4 +44,8 @@ public class StatusMsg {
 
     public static final String UNKNOW_ERROR = "未知错误";
 
+    public static final String ORDER_SUCCESS = "下单成功";
+
+    public static final String ORDER_FAILED = "下单失败,该商品已出售";
+
 }

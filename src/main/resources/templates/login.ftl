@@ -37,7 +37,7 @@
             return{
                 loginForm: {
                     email: '',
-                    password: '',
+                    password: ''
                 },
                 loginFormRules: {
                     email: [

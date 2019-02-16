@@ -8,7 +8,7 @@
     </select>
     
     <select id="selectPictureByCommodity_id" resultType="com.yan.domain.Picture" parameterType="com.yan.domain.Toy">
-        select * from picture where commodity_id = #{commodity_id}
+        select * from picture where commodity_id = #{commodity_id} and number = 1
     </select>
     
     <select id="countAllToy" resultType="java.lang.Integer">
@@ -21,5 +21,17 @@
 
     <select id="selectToyByTitle" resultType="com.yan.domain.Toy">
         select * from toy where title like "%"#{title}"%" limit #{start}, 20
+    </select>
+    
+    <select id="selectToyById" resultType="com.yan.domain.Toy" parameterType="com.yan.domain.Toy">
+        select * from toy where commodity_id = #{commodity_id}
+    </select>
+
+    <select id="selectPicturesByCommodity_id" resultType="com.yan.domain.Picture" parameterType="com.yan.domain.Toy">
+        select * from picture where commodity_id = #{commodity_id}
+    </select>
+    
+    <select id="selectUserByToy" resultType="com.yan.domain.User" parameterType="com.yan.domain.Toy">
+        select * from user where uid = ( select uid from toy where commodity_id = #{commodity_id} )
     </select>
 </mapper>

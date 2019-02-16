@@ -106,7 +106,7 @@ public interface MallService {
      * @param toy
      * @return
      */
-    Comment[] getComment(Toy toy);
+    Comments getComments(Toy toy);
 
     /**
      * 添加收藏夹
@@ -130,7 +130,7 @@ public interface MallService {
      * @param user
      * @return
      */
-    boolean addOrder(Order order, User user);
+    boolean addOrder(Order order);
 
     /**
      * 删除订单
