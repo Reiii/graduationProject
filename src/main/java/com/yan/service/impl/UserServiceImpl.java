@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
         if(user_in_db != null){
             user_in_db.setActive_code(Utils.getActiveCode());
             userMapper.update_user(user_in_db);
-            Utils.sendActive_Code(user_in_db, 1);
+            Utils.sendActive_Code(user_in_db, 2);
             return true;
         }else{
             return false;
@@ -100,8 +100,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user) {
-        userMapper.update_user(user);
         User user_in_db = userMapper.selectById(user);
+        user_in_db.setPassword(user.getPassword());
+        userMapper.update_user(user_in_db);
         return user_in_db;
     }
 

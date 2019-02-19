@@ -31,8 +31,8 @@ public class Utils {
     private static final String EMAIL_REGEX = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
     private static final String mail = "510602825@qq.com";
     private static final String Authorization_code = "mqprmgmmhdchbhgc";
-    private static final String mail_reg = "请打开以下链接激活你的账号：\nlocalhost:8080/active?uid=%s&code=%s";
-    private static final String mail_pwd = "请打开以下链接修改密码：\nlocalhost:8080/changePasswd?id=%s&Active_Code=%s";
+    private static final String mail_reg = "请打开以下链接激活你的账号：\nlocalhost:8080/user/active?uid=%s&code=%s";
+    private static final String mail_pwd = "请打开以下链接修改密码：\nlocalhost:8080/user/setPassword/verify?uid=%s&code=%s";
 
 
     /**

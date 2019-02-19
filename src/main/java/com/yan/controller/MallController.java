@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Package ：com.yan.controller
@@ -146,17 +150,18 @@ public class MallController {
 
     @loginRequire
     @RequestMapping(value = "/submitOrder", method = RequestMethod.POST)
-    public Status submitOrder(HttpSession session, @RequestParam("buyer_phone") String phone, @RequestParam("province") String province, @RequestParam("city") String city, @RequestParam("district") String district, @RequestParam("address") String address){
+    public Status submitOrder(HttpSession session, @RequestParam("buyer_phone") String phone, @RequestParam("province") String province, @RequestParam("city") String city, @RequestParam("district") String district, @RequestParam("address") String address, @RequestParam("transction") String transction){
         String buyer_id = ((User)session.getAttribute("user")).getUid();
         String commodity_id = (String)session.getAttribute("buyItem");
         Order order = new Order();
         order.setBuyer_id(buyer_id);
-        order.setCommdity_id(commodity_id);
+        order.setCommodity_id(commodity_id);
         order.setBuyer_phone(phone);
         order.setProvince(province);
         order.setCity(city);
         order.setDistrict(district);
         order.setAddress(address);
+        order.setMeans_of_transction(transction);
         order.setStatus("0");
         boolean isSuccess = mallService.addOrder(order);
         if(isSuccess){
@@ -164,6 +169,24 @@ public class MallController {
         }else{
             return new Status(StatusMsg.ORDER_FAILED);
         }
+    }
+
+    @loginRequire
+    @RequestMapping(value = "/myOrders", method = RequestMethod.GET)
+    public List<Map<String, String>> myOrders(HttpSession session){
+        User user = (User)session.getAttribute("user");
+        List<Map<String, String>> list = mallService.selectOrderByUser(user);
+        return list;
+
+    }
+
+    @loginRequire
+    @RequestMapping(value = "/myToys", method = RequestMethod.GET)
+    public List<Map<String, String>> myToys(HttpSession session){
+        User user = (User)session.getAttribute("user");
+        List<Map<String, String>> list = mallService.selectToyByUser(user);
+        return list;
+
     }
 
 }

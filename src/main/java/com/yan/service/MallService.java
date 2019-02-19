@@ -4,6 +4,8 @@ import com.yan.domain.*;
 import com.yan.exception.MallException;
 import com.yan.util.Page;
 
+import java.util.List;
+
 /**
  * Package ：com.yan.service
  * Description：
@@ -153,7 +155,14 @@ public interface MallService {
      * @param user
      * @return
      */
-    Order[] selectOrder(User user);
+    List selectOrderByUser(User user);
+
+    /**
+     * 查看用户玩具
+     * @param user
+     * @return
+     */
+    List selectToyByUser(User user);
 
     /**
      * 查看订单信息

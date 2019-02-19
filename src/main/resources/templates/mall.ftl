@@ -10,12 +10,14 @@
     <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
     <style>
-        a {
+        a{
+            text-decoration: none;
+        }
+        .item {
             display: inline-block;
             width: 200px;
             height: 330px;
             margin-right: 10px;
-            text-decoration: none;
             color: black;
         }
         .item-img {
@@ -32,8 +34,9 @@
 <div id="mall">
     <el-menu  :default-active="activeIndex" class="el-menu-demo" mode="horizontal" >
         <el-menu-item index="1">二手商城</el-menu-item>
-        <el-menu-item index="2">交流论坛</el-menu-item>
-        <el-menu-item index="3">同城活动</el-menu-item>
+        <el-menu-item index="2"><a href="http://localhost:8080/forum/home">交流论坛</a></el-menu-item>
+        <el-menu-item index="3"><a href="http://localhost:8080/activity/home">同城活动</a></el-menu-item>
+        <el-menu-item index="4"><a href="http://localhost:8080/user/userinfo">个人中心</a></el-menu-item>
     </el-menu>
     <br>
     <el-container v-if="items != []">
@@ -64,7 +67,7 @@
                 <span v-for="i in items">
                     <a class="item" @click="handleHrefClick(i.commodity_id)">
                         <div class="item-img">
-                            <img v-bind:id="i.commodity_id" v-bind:src="getCover(i.commodity_id)">
+                            <img v-bind:id="i.commodity_id" :src="getCover(i.commodity_id)">
                         </div>
                         <div class="item-title">{{ i.title }}</div>
                         <div class="item-price"><font color="red" size="4">¥ {{ i.price }}</font></div>
@@ -156,23 +159,25 @@
                     });
                 });
 			},
-            getCover(commodity_id){
-                axios.get("http://localhost:8080/mall/cover",{
-                    params:{
-                        commodity_id: commodity_id
-					}
-				}).then((response) => {
-                    document.getElementById(commodity_id).src=response.data.url;
-            })
-            .catch(function(error){
-                    console.log("error in loading cover.")
-                });
-            },
 			handleCurrentChange(val){
                 this.handlePage(val);
 			},
 			handleHrefClick(id){
-                location.href="http://localhost:8080/mall/item?commodity_id=" + id;
+                window.open("http://localhost:8080/mall/item?commodity_id=" + id, "_blank");
+            },
+            getCover(commodity_id){
+                    axios.get("http://localhost:8080/mall/cover",{
+                        params:{
+                            commodity_id: commodity_id
+                        }
+                    }).then((response) => {
+                        //return response.data.url;
+                    document.getElementById(commodity_id).src=response.data.url;
+                })
+                .catch(function(error){
+                        console.log("error in loading cover.")
+                    });
+
             }
         }
     })

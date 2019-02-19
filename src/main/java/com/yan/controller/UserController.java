@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -153,9 +154,9 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/setPassword/setEmail", method = RequestMethod.GET)
-    public Status setEmail(String email){
+    public Status setEmail(@Param("email") String email){
         Status status = new Status();
-        if(userService.check_email(email)){
+        if(!userService.check_email(email)){
             User user = new User();
             user.setEmail(email);
             userService.forget_password(user);
@@ -171,16 +172,13 @@ public class UserController {
      * @param session
      * @return
      */
+    @loginRequire
     @RequestMapping(value = "/setPassword/change", method = RequestMethod.GET)
     public Status change_password(HttpSession session){
         Status status = new Status();
         User user = (User)session.getAttribute("user");
-        if(user != null){
-            userService.change_password(user);
-            status.setStatus(StatusMsg.RESET_PASSWORD);
-        }else{
-            status.setStatus(StatusMsg.NOT_LOGIN);
-        }
+        userService.change_password(user);
+        status.setStatus(StatusMsg.RESET_PASSWORD);
         return status;
     }
 
@@ -192,7 +190,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/setPassword/verify", method = RequestMethod.GET)
-    public Status verify(String uid, String code, HttpSession session){
+    public Status verify(@RequestParam("uid") String uid, @RequestParam("code") String code, HttpSession session){
         Status status = new Status();
         User user = new User();
         user.setUid(uid);
@@ -227,8 +225,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/setPassword/update", method = RequestMethod.POST)
-    @loginRequire
-    public Status updatePassword(String password, HttpSession session){
+    public Status updatePassword(@RequestParam("password") String password, HttpSession session){
         Status status = new Status();
         String uid = (String)session.getAttribute("changePassword");
         if(uid != null){
@@ -247,35 +244,24 @@ public class UserController {
         return status;
     }
 
-    /**
-     * 查看用户详细信息
-     * @param session
-     * @return
-     */
-    @RequestMapping(value = "/userinfo/detail", method = RequestMethod.GET)
     @loginRequire
-    public ModelAndView userInfo(HttpSession session){
-        ModelAndView mav = new ModelAndView();
-        User user = (User)session.getAttribute("user");
-        mav.setViewName("userDetail");
-        mav.addObject("user", user);
-        return mav;
+    @RequestMapping(value = "/userinfo", method = RequestMethod.GET)
+    public ModelAndView userInfo(){
+        return new ModelAndView("personInfo");
     }
 
     /**
-     * 跳转至修改用户信息页
+     * 获取用户详细信息
      * @param session
      * @return
      */
-    @RequestMapping(value = "/userinfo/change", method = RequestMethod.GET)
+    @RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
     @loginRequire
-    public ModelAndView changeUserInfo(HttpSession session){
-        ModelAndView mav = new ModelAndView();
+    public User getUserInfo(HttpSession session){
         User user = (User)session.getAttribute("user");
-        mav.setViewName("changeUserInfo");
-        mav.addObject("user", user);
-        return mav;
+        return user;
     }
+
 
     /**
      * 更新用户信息
@@ -285,7 +271,7 @@ public class UserController {
      */
     @RequestMapping(value = "/userinfo/update", method = RequestMethod.POST)
     @loginRequire
-    public Status updateUserInfo(String username, HttpSession session){
+    public Status updateUserInfo(@RequestParam("username") String username, HttpSession session){
         Status status = new Status();
         User old_user = (User)session.getAttribute("user");
         old_user.setUsername(username);

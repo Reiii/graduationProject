@@ -1,6 +1,7 @@
 package com.yan.interceptor;
 
 import com.yan.constant.loginRequire;
+import com.yan.exception.NoLoginException;
 import com.yan.exception.UserException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -31,7 +32,7 @@ public class LoginRequireInterceptor {
     public void method(){}
 
     @Before("method()")
-    public void beforeMethod(JoinPoint point) throws UserException {
+    public void beforeMethod(JoinPoint point) throws NoLoginException {
         Method method = ((MethodSignature)point.getSignature()).getMethod();
         if(method.isAnnotationPresent(loginRequire.class)){
             RequestAttributes ra = RequestContextHolder.getRequestAttributes();
@@ -39,7 +40,7 @@ public class LoginRequireInterceptor {
             HttpServletRequest request = sra.getRequest();
             HttpSession session = request.getSession();
             if(session.getAttribute("user") == null){
-                throw new UserException(UserException.NO_LOGIN);
+                throw new NoLoginException(NoLoginException.NO_LOGIN);
             }
         }
     }

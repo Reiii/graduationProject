@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yan.dao.MallMapper">
     <select id="selectAllToy" resultType="com.yan.domain.Toy">
-        select * from toy limit #{start}, 20
+        select * from toy where status = 0 limit #{start}, 20
     </select>
     
     <select id="selectPictureByCommodity_id" resultType="com.yan.domain.Picture" parameterType="com.yan.domain.Toy">
@@ -12,15 +12,15 @@
     </select>
     
     <select id="countAllToy" resultType="java.lang.Integer">
-        select count(*) from toy
+        select count(*) from toy where status = 0
     </select>
     
     <select id="countToyByKeyword" resultType="java.lang.Integer">
-      select count(*) from toy where title like "%"#{keyword}"%"
+      select count(*) from toy where title like "%"#{keyword}"%" and status = 0
     </select>
 
-    <select id="selectToyByTitle" resultType="com.yan.domain.Toy">
-        select * from toy where title like "%"#{title}"%" limit #{start}, 20
+    <select id="selectToyByTitle_page" resultType="com.yan.domain.Toy">
+        select * from toy where title like "%"#{title}"%" and status = 0 limit #{start}, 20
     </select>
     
     <select id="selectToyById" resultType="com.yan.domain.Toy" parameterType="com.yan.domain.Toy">
@@ -33,5 +33,38 @@
     
     <select id="selectUserByToy" resultType="com.yan.domain.User" parameterType="com.yan.domain.Toy">
         select * from user where uid = ( select uid from toy where commodity_id = #{commodity_id} )
+    </select>
+
+    <insert id="addOrder" parameterType="com.yan.domain.Order">
+        insert into order_info(buyer_id, seller_id, commodity_id, order_time, price, buyer_phone, province, city, district, address, status, means_of_transction)
+          values (#{buyer_id}, #{seller_id}, #{commodity_id}, #{order_time}, #{price}, #{buyer_phone}, #{province}, #{city}, #{district}, #{address}, #{status}, #{means_of_transction})
+    </insert>
+    
+    <update id="updateToy" parameterType="com.yan.domain.Toy">
+        update toy set title = #{title},
+            description = #{description},
+            means_of_transction = #{means_of_transction},
+            province = #{province},
+            city = #{city},
+            status = #{status},
+            price = #{price}
+         where commodity_id = #{commodity_id}
+    </update>
+    
+    <insert id="addToy" parameterType="com.yan.domain.Toy">
+        insert into toy (title, description, means_of_transction, province, city, status, price)
+          values (#{title}, #{description}, #{means_of_transction}, #{province}, #{city}, #{status}, #{price})
+    </insert>
+    
+    <delete id="delToy" parameterType="com.yan.domain.Toy">
+        delete from toy where commodity_id = #{commodity_id}
+    </delete>
+
+    <select id="selectOrderByUser" parameterType="com.yan.domain.User" resultType="com.yan.domain.Order">
+        select * from order_info where buyer_id = #{uid}
+    </select>
+
+    <select id="selectToyByUser" parameterType="com.yan.domain.User" resultType="com.yan.domain.Toy">
+        select * from toy where uid = #{uid}
     </select>
 </mapper>

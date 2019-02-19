@@ -8,10 +8,7 @@ import com.yan.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Package ：com.yan.service.impl
@@ -77,7 +74,7 @@ public class MallServiceImpl implements MallService{
         if(Integer.parseInt(page) > total_page && total_page != 0){
             throw new MallException(MallException.PAGE_OVER_LIMIT);
         }
-        Toy[] toys = mallMapper.selectToyByTitle(keyword, (Integer.parseInt(page) - 1) * 20);
+        Toy[] toys = mallMapper.selectToyByTitle_page(keyword, (Integer.parseInt(page) - 1) * 20);
         Page<Toy> toyPage = new Page<>();
         toyPage.setCurrentPage(Integer.parseInt(page));
         toyPage.setStartPage(1);
@@ -93,7 +90,7 @@ public class MallServiceImpl implements MallService{
         if(Integer.parseInt(page) > total_page){
             throw new MallException(MallException.PAGE_OVER_LIMIT);
         }
-        Toy[] toys = mallMapper.selectToyByType(type, String.valueOf((Integer.parseInt(page) - 1) * 20));
+        Toy[] toys = mallMapper.selectToyByType_page(type, String.valueOf((Integer.parseInt(page) - 1) * 20));
         Page<Toy> toyPage = new Page<>();
         toyPage.setCurrentPage(Integer.parseInt(page));
         toyPage.setStartPage(1);
@@ -109,7 +106,7 @@ public class MallServiceImpl implements MallService{
         if(Integer.parseInt(page) > total_page){
             throw new MallException(MallException.PAGE_OVER_LIMIT);
         }
-        Toy[] toys = mallMapper.selectToyByProvince(province, String.valueOf((Integer.parseInt(page) - 1) * 20));
+        Toy[] toys = mallMapper.selectToyByProvince_page(province, String.valueOf((Integer.parseInt(page) - 1) * 20));
         Page<Toy> toyPage = new Page<>();
         toyPage.setCurrentPage(Integer.parseInt(page));
         toyPage.setStartPage(1);
@@ -125,7 +122,7 @@ public class MallServiceImpl implements MallService{
         if(Integer.parseInt(page) > total_page){
             throw new MallException(MallException.PAGE_OVER_LIMIT);
         }
-        Toy[] toys = mallMapper.selectToyByCity(city, String.valueOf((Integer.parseInt(page) - 1) * 20));
+        Toy[] toys = mallMapper.selectToyByCity_page(city, String.valueOf((Integer.parseInt(page) - 1) * 20));
         Page<Toy> toyPage = new Page<>();
         toyPage.setCurrentPage(Integer.parseInt(page));
         toyPage.setStartPage(1);
@@ -141,7 +138,7 @@ public class MallServiceImpl implements MallService{
         if(Integer.parseInt(page) > total_page){
             throw new MallException(MallException.PAGE_OVER_LIMIT);
         }
-        Toy[] toys = mallMapper.selectToyByUser(user, String.valueOf((Integer.parseInt(page) - 1) * 20));
+        Toy[] toys = mallMapper.selectToyByUser_page(user, String.valueOf((Integer.parseInt(page) - 1) * 20));
         Page<Toy> toyPage = new Page<>();
         toyPage.setCurrentPage(Integer.parseInt(page));
         toyPage.setStartPage(1);
@@ -201,7 +198,7 @@ public class MallServiceImpl implements MallService{
     @Override
     public synchronized boolean addOrder(Order order) {
         Toy toy = new Toy();
-        toy.setCommodity_id(order.getCommdity_id());
+        toy.setCommodity_id(order.getCommodity_id());
         Toy toy_in_db = mallMapper.selectToyById(toy);
         if(toy_in_db.getStatus().equals("1") || toy_in_db.getStatus().equals("2")){
             return false;
@@ -210,6 +207,8 @@ public class MallServiceImpl implements MallService{
             order.setPrice(toy_in_db.getPrice());
             order.setOrder_time(String.valueOf(new Date().getTime()));
             mallMapper.addOrder(order);
+            toy_in_db.setStatus("1");
+            mallMapper.updateToy(toy_in_db);
             return true;
         }
     }
@@ -241,8 +240,37 @@ public class MallServiceImpl implements MallService{
     }
 
     @Override
-    public Order[] selectOrder(User user) {
-        return mallMapper.selectOrderByUser(user);
+    public List selectOrderByUser(User user) {
+        List<Map<String, String>> list = new ArrayList<>();
+        Order[] orders = mallMapper.selectOrderByUser(user);
+        for(Order o : orders){
+            Toy toy = new Toy();
+            toy.setCommodity_id(o.getCommodity_id());
+            Toy toy_in_db = mallMapper.selectToyById(toy);
+            Map<String, String> map = new HashMap<>();
+            map.put("order_time", o.getOrder_time());
+            map.put("title", toy_in_db.getTitle());
+            map.put("price", String.valueOf(toy_in_db.getPrice()));
+            map.put("means_of_transction", "o".equals(o.getMeans_of_transction()) ? "线上交易" : "线下交易");
+            map.put("status", "0".equals(o.getStatus()) ? "正在进行" : ("1".equals(o.getStatus()) ? "已完成" : "已取消"));
+            list.add(map);
+        }
+        return list;
+    }
+
+    @Override
+    public List selectToyByUser(User user) {
+        List<Map<String, String>> list = new ArrayList<>();
+        Toy[] toys = mallMapper.selectToyByUser(user);
+        for(Toy t : toys){
+            Map<String, String> map = new HashMap<>();
+            map.put("title", t.getTitle());
+            map.put("means_of_transction", "o".equals(t.getMeans_of_transction()) ? "线上交易" : ("1".equals(t.getMeans_of_transction()) ? "线下交易" : "线上线下均可"));
+            map.put("price", String.valueOf(t.getPrice()));
+            map.put("status", "0".equals(t.getStatus()) ? "未售出" : ("1".equals(t.getStatus()) ? "正在进行" : "已售出"));
+            list.add(map);
+        }
+        return list;
     }
 
     @Override

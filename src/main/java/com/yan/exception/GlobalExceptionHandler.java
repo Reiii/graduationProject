@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Package ：com.yan.exception
@@ -23,6 +25,16 @@ public class GlobalExceptionHandler {
         info.setCode(ErrorInfo.ERROR);
         info.setMsg(ex.getMessage());
         return info;
+    }
+
+    @ExceptionHandler(value = NoLoginException.class)
+    public void handleNoLoginException(HttpServletResponse response, NoLoginException ex){
+        try{
+            response.sendRedirect("/user/login");
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
 }

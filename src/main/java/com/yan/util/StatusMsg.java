@@ -24,7 +24,7 @@ public class StatusMsg {
 
     public static final String SEND_MAIL = "已发送邮件到邮箱,请到邮箱激活账号";
 
-    public static final String RESET_PASSWORD = "已发送邮件到邮箱,请到邮箱验证";
+    public static final String RESET_PASSWORD = "已发送邮件";
 
     public static final String REG_ERROR = "注册失败";
 

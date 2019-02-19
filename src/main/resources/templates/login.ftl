@@ -20,6 +20,7 @@
 					</el-form-item>
 					<el-form-item label="密码" prop="password">
 						<el-input type="password" v-model="loginForm.password"></el-input>
+                        <a href="http://localhost:8080/user/setPassword/forget">忘记密码</a>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
@@ -78,7 +79,7 @@
                             }
                         }).then((response) => {
                             if(response.data.status == '登录成功'){
-                                location.href = 'http://localhost:8080/mall'
+                                location.href = 'http://localhost:8080/mall/home'
                             }else{
                                 win.$alert(response.data.status, '错误', {
                                 confirmButtonText: '确定'

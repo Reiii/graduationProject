@@ -76,6 +76,10 @@
                                 <el-form-item label="联系电话"  prop="buyer_phone">
                                     <el-input v-model="orderForm.buyer_phone"></el-input>
                                 </el-form-item>
+								<el-form-item label="交易方式" prop="transction">
+									<el-radio v-model="orderForm.transction" label="0">线上交易</el-radio>
+                                    <el-radio v-model="orderForm.transction" label="1">线下交易</el-radio>
+								</el-form-item>
                                 <el-form-item><el-button type="primary" @click="submitForm('orderForm')">提交订单</el-button></el-form-item>
                             </el-form>
                         </el-col>
@@ -97,7 +101,8 @@
                     city: '',
                     district: '',
                     address: '',
-                    buyer_phone: ''
+                    buyer_phone: '',
+					transction: ''
                 },
                 orderFormRules: {
                     province: [
@@ -114,7 +119,10 @@
                     ],
                     buyer_phone: [
                         {required: true, message: '请输入联系电话', trigger: 'blur'}
-                    ]
+                    ],
+					transction:[
+						{ required: true, message: '请选择交易方式', trigger: 'blur'}
+					]
 
                 },
                 item: ''
@@ -188,7 +196,8 @@
                                 city: this.orderForm.city,
                                 district: this.orderForm.district,
                                 address: this.orderForm.address,
-                                buyer_phone: this.orderForm.buyer_phone
+                                buyer_phone: this.orderForm.buyer_phone,
+								transction: this.orderForm.transction
                             },
                             transformRequest: [
                                 function (data) {
@@ -204,18 +213,18 @@
                                 'Content-Type': 'application/x-www-form-urlencoded'
                             }
                         }).then((response) => {
-                            if(response.data.status == '提交成功'){
-                            win.$alert(response.data.status, '提示', {
+                            if(response.data.status == '下单成功'){
+                            win.$alert(response.data.status + ',即将前往商城首页..', '提示', {
                                 confirmButtonText: '确定'
                             }).then(() => {
                                 location.href = 'http://localhost:8080/mall/home';
-                        });
-                        }else{
-                            win.$alert(response.data.status, '错误', {
-                                confirmButtonText: '确定'
-                            });
-                        }
-                    }).
+                        	});
+                        	}else{
+								win.$alert(response.data.status, '错误', {
+									confirmButtonText: '确定'
+								});
+                        	}
+						}).
                         catch(function (error) {
                             console.log('submit error');
                             win.$alert('网络连接丢失', '错误', {

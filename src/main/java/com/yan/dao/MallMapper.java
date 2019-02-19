@@ -19,7 +19,7 @@ public interface MallMapper {
      * @param toy
      * @return
      */
-    String addToy(Toy toy);
+    int addToy(Toy toy);
 
     /**
      * 根据玩具Id选择玩具
@@ -29,39 +29,46 @@ public interface MallMapper {
     Toy selectToyById(Toy toy);
 
     /**
-     * 根据类型选择玩具
+     * 根据类型选择玩具(分页)
      * @param type
      * @return
      */
-    Toy[] selectToyByType(String type, String page);
+    Toy[] selectToyByType_page(String type, String page);
 
     /**
-     * 根据省份选择玩具
+     * 根据省份选择玩具(分页)
      * @param province
      * @return
      */
-    Toy[] selectToyByProvince(String province, String page);
+    Toy[] selectToyByProvince_page(String province, String page);
 
     /**
-     * 根据城市选择玩具
+     * 根据城市选择玩具(分页)
      * @param city
      * @return
      */
-    Toy[] selectToyByCity(String city, String page);
+    Toy[] selectToyByCity_page(String city, String page);
+
+    /**
+     * 根据用户选择玩具(分页)
+     * @param user
+     * @return
+     */
+    Toy[] selectToyByUser_page(User user, String page);
+
+    /**
+     * 根据标题选择玩具(分页)
+     * @param title
+     * @return
+     */
+    Toy[] selectToyByTitle_page(@Param("title") String title, @Param("start") int start);
 
     /**
      * 根据用户选择玩具
      * @param user
      * @return
      */
-    Toy[] selectToyByUser(User user, String page);
-
-    /**
-     * 根据标题选择玩具
-     * @param title
-     * @return
-     */
-    Toy[] selectToyByTitle(@Param("title") String title, @Param("start") int start);
+    Toy[] selectToyByUser(User user);
 
     /**
      * 删除玩具
@@ -75,14 +82,15 @@ public interface MallMapper {
      * @param toy
      * @return
      */
-    String updateToy(Toy toy);
+    int updateToy(Toy toy);
+
 
     /**
      * 增加订单
      * @param order
      * @return
      */
-    String addOrder(Order order);
+    int addOrder(Order order);
 
     /**
      * 删除订单

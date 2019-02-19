@@ -23,7 +23,7 @@
           credit = #{credit},
           reg_time = #{reg_time},
           active_code = #{active_code},
-          `type` = #{type},
+          type = #{type},
           status = #{status}
         where uid = #{uid}
     </update>

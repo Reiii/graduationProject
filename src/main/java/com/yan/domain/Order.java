@@ -14,7 +14,7 @@ public class Order implements Serializable {
     private String order_id;
     private String buyer_id;
     private String seller_id;
-    private String commdity_id;
+    private String commodity_id;
     private String order_time;
     private BigDecimal price;
     private String buyer_phone;
@@ -22,6 +22,7 @@ public class Order implements Serializable {
     private String city;
     private String district;
     private String address;
+    private String means_of_transction;
     private String status;
 
     public String getOrder_id() {
@@ -48,12 +49,12 @@ public class Order implements Serializable {
         this.seller_id = seller_id;
     }
 
-    public String getCommdity_id() {
-        return commdity_id;
+    public String getCommodity_id() {
+        return commodity_id;
     }
 
-    public void setCommdity_id(String commdity_id) {
-        this.commdity_id = commdity_id;
+    public void setCommodity_id(String commdity_id) {
+        this.commodity_id = commdity_id;
     }
 
     public String getOrder_time() {
@@ -110,6 +111,14 @@ public class Order implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getMeans_of_transction() {
+        return means_of_transction;
+    }
+
+    public void setMeans_of_transction(String means_of_transction) {
+        this.means_of_transction = means_of_transction;
     }
 
     public String getStatus() {
