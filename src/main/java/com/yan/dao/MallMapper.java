@@ -75,7 +75,7 @@ public interface MallMapper {
      * @param toy
      * @return
      */
-    String delToy(Toy toy);
+    int delToy(Toy toy);
 
     /**
      * 更新玩具信息
@@ -97,14 +97,14 @@ public interface MallMapper {
      * @param order
      * @return
      */
-    String delOrder(Order order);
+    int delOrder(Order order);
 
     /**
      * 修改订单
      * @param order
      * @return
      */
-    String updateOrder(Order order);
+    int updateOrder(Order order);
 
     /**
      * 根据用户选择订单
@@ -132,14 +132,14 @@ public interface MallMapper {
      * @param comment
      * @return
      */
-    String addComment(Comment comment);
+    int addComment(Comment comment);
 
     /**
      * 删除评论
      * @param comment
      * @return
      */
-    String delComment(Comment comment);
+    int delComment(Comment comment);
 
     /**
      * 根据商品选择评论
@@ -213,13 +213,13 @@ public interface MallMapper {
      * 添加收藏夹
      * @return
      */
-    String addFavorite(Favorite favorite);
+    int addFavorite(Favorite favorite);
 
     /**
      * 删除收藏夹
      * @return
      */
-    String delFavorite(Favorite favorite);
+    int delFavorite(Favorite favorite);
 
     /**
      * 根据收藏id选择收藏夹

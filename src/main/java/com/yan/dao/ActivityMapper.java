@@ -2,6 +2,7 @@ package com.yan.dao;
 
 import com.yan.domain.City_activity;
 import com.yan.domain.User;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * Package ：com.yan.dao
@@ -17,21 +18,21 @@ public interface ActivityMapper {
      * @param city_activity
      * @return
      */
-    String addActivity(City_activity city_activity);
+    int addActivity(City_activity city_activity);
 
     /**
      * 删除同城活动
      * @param city_activity
      * @return
      */
-    String delActivity(City_activity city_activity);
+    int delActivity(City_activity city_activity);
 
     /**
      * 更新同城活动
      * @param city_activity
      * @return
      */
-    String updateActivity(City_activity city_activity);
+    int updateActivity(City_activity city_activity);
 
     /**
      * 根据Id选择同城活动
@@ -41,46 +42,60 @@ public interface ActivityMapper {
     City_activity selectActivityById(City_activity city_activity);
 
     /**
+     * 所有同城活动
+     * @param start
+     * @return
+     */
+    City_activity[] selectAllActivity(@Param("city_activity") City_activity city_activity, @Param("start") int start);
+
+    /**
      * 根据标题选择同城活动
      * @param city_activity
      * @return
      */
-    City_activity[] selectActivityByTitle(City_activity city_activity);
+    City_activity[] selectActivityByTitle(@Param("city_activity") City_activity city_activity, @Param("start") int start);
 
     /**
      * 根据时间选择同城活动
      * @param city_activity
      * @return
      */
-    City_activity[] selectActivityByTime(City_activity city_activity);
+    City_activity[] selectActivityByTime(@Param("city_activity") City_activity city_activity, @Param("start") int start);
 
     /**
      * 根据省份选择同城活动
      * @param city_activity
      * @return
      */
-    City_activity[] selectActivityByProvince(City_activity city_activity);
+    City_activity[] selectActivityByProvince(@Param("city_activity") City_activity city_activity, @Param("start") int start);
 
     /**
      * 根据城市选择同城活动
      * @param city_activity
      * @return
      */
-    City_activity[] selectActivityByCity(City_activity city_activity);
+    City_activity[] selectActivityByCity(@Param("city_activity") City_activity city_activity, @Param("start") int start);
 
     /**
      * 根据费用选择同城活动
      * @param city_activity
      * @return
      */
-    City_activity[] selectActivityByCost(City_activity city_activity);
+    City_activity[] selectActivityByCost(@Param("city_activity") City_activity city_activity, @Param("start") int start);
 
     /**
      * 根据活动状态选择同城活动
      * @param city_activity
      * @return
      */
-    City_activity[] selectActivityByStatus(City_activity city_activity);
+    City_activity[] selectActivityByStatus(@Param("city_activity") City_activity city_activity, @Param("start") int start);
+
+    /**
+     * 获得同城活动的数量
+     * @param city_activity
+     * @return
+     */
+    int countAllActivity(City_activity city_activity);
 
     /**
      * 添加参与者

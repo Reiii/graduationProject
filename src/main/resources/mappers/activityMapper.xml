@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yan.dao.ActivityMapper">
+    <insert id="addActivity" parameterType="com.yan.domain.City_activity">
+        insert into city_activity(title, start_time, end_time, province, city, address, detail, cost, uid, time, participants_num, status)
+          values(#{title}, #{start_time}, #{end_time}, #{province}, #{city}, #{address}, #{detail}, #{cost}, #{uid}, #{time}, #{participants_num}, #{status})
+    </insert>
+
+    <delete id="delActivity" parameterType="com.yan.domain.City_activity">
+        delete from city_activity where activity_id = #{activity_id}
+    </delete>
+
+    <update id="updateActivity" parameterType="com.yan.domain.City_activity">
+        update set title = #{title},
+          start_time = #{start_time},
+          end_time = #{end_time},
+          province = #{end_time},
+          city = #{city},
+          address = #{address},
+          detail = #{detail},
+          cost = #{cost},
+          uid = #{uid},
+          time = #{time},
+          participants_num = #{participants_num},
+          status = #{status}
+    </update>
+    
+    <select id="selectActivityById" parameterType="com.yan.domain.City_activity" resultType="com.yan.domain.City_activity">
+        select * from city_activity where activity_id = #{activity_id}
+    </select>
+    
+    <select id="selectAllActivity" resultType="com.yan.domain.City_activity">
+        select * from city_activity limit #{start}, 20
+    </select>
+    
+    <select id="selectActivityByTitle" resultType="com.yan.domain.City_activity">
+        select * from city_activity where title like "%"#{city_activity.title}"%" and start_time > #{city_activity.start_time} limit #{start}, 20
+    </select>
+    
+    <select id="selectActivityByTime" resultType="com.yan.domain.City_activity">
+        select * from city_activity where start_time > #{city_activity.start_time} limit #{start}, 20
+    </select>
+    
+    <select id="selectActivityByProvince" resultType="com.yan.domain.City_activity">
+        select * from city_activity where province = #{city_activity.province} and start_time > #{city_activity.start_time} limit #{start}, 20
+    </select>
+
+    <select id="selectActivityByCity" resultType="com.yan.domain.City_activity">
+        select * from city_activity where city = #{city_activity.city} and start_time > #{city_activity.start_time} limit #{start}, 20
+    </select>
+
+    <select id="selectActivityByCost" resultType="com.yan.domain.City_activity">
+        select * from city_activity where #{city_activity.province} >= cost and start_time > #{city_activity.start_time} limit #{start}, 20
+    </select>
+
+    <select id="selectActivityByStatus" resultType="com.yan.domain.City_activity">
+        select * from city_activity where status = #{city_activity.status} limit #{start}, 20
+    </select>
+
+    <select id="countAllActivity" resultType="com.yan.domain.City_activity">
+        select count(*) from city_activity where start_time > #{city_activity.start_time} limit #{start}, 20
+    </select>
+
+
+</mapper>

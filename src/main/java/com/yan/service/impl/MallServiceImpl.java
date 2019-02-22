@@ -23,8 +23,7 @@ public class MallServiceImpl implements MallService{
     private MallMapper mallMapper;
 
     @Override
-    public boolean addToy(Toy toy, User user) {
-        toy.setUid(user.getUid());
+    public boolean addToy(Toy toy) {
         mallMapper.addToy(toy);
         return true;
     }
@@ -248,10 +247,11 @@ public class MallServiceImpl implements MallService{
             toy.setCommodity_id(o.getCommodity_id());
             Toy toy_in_db = mallMapper.selectToyById(toy);
             Map<String, String> map = new HashMap<>();
+            map.put("order_id", o.getOrder_id());
             map.put("order_time", o.getOrder_time());
             map.put("title", toy_in_db.getTitle());
             map.put("price", String.valueOf(toy_in_db.getPrice()));
-            map.put("means_of_transction", "o".equals(o.getMeans_of_transction()) ? "线上交易" : "线下交易");
+            map.put("means_of_transction", "0".equals(o.getMeans_of_transction()) ? "线上交易" : "线下交易");
             map.put("status", "0".equals(o.getStatus()) ? "正在进行" : ("1".equals(o.getStatus()) ? "已完成" : "已取消"));
             list.add(map);
         }
@@ -264,8 +264,9 @@ public class MallServiceImpl implements MallService{
         Toy[] toys = mallMapper.selectToyByUser(user);
         for(Toy t : toys){
             Map<String, String> map = new HashMap<>();
+            map.put("commodity_id", t.getCommodity_id());
             map.put("title", t.getTitle());
-            map.put("means_of_transction", "o".equals(t.getMeans_of_transction()) ? "线上交易" : ("1".equals(t.getMeans_of_transction()) ? "线下交易" : "线上线下均可"));
+            map.put("means_of_transction", "0".equals(t.getMeans_of_transction()) ? "线上交易" : ("1".equals(t.getMeans_of_transction()) ? "线下交易" : "线上线下均可"));
             map.put("price", String.valueOf(t.getPrice()));
             map.put("status", "0".equals(t.getStatus()) ? "未售出" : ("1".equals(t.getStatus()) ? "正在进行" : "已售出"));
             list.add(map);
@@ -300,5 +301,31 @@ public class MallServiceImpl implements MallService{
     public User getUserByToy(Toy toy) {
         User seller = mallMapper.selectUserByToy(toy);
         return seller;
+    }
+
+    @Override
+    public boolean cancelOrder(Order order, User user) {
+        Order order_in_db = mallMapper.selectOrderById(order);
+        if(order_in_db != null && order_in_db.getStatus().equals("0")){
+            if(order_in_db.getBuyer_id().equals(user.getUid())){
+                order_in_db.setStatus("2");
+                mallMapper.updateOrder(order_in_db);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean confirmOrder(Order order, User user) {
+        Order order_in_db = mallMapper.selectOrderById(order);
+        if(order_in_db != null && order_in_db.getStatus().equals("0")){
+            if(order_in_db.getBuyer_id().equals(user.getUid())){
+                order_in_db.setStatus("1");
+                mallMapper.updateOrder(order_in_db);
+                return true;
+            }
+        }
+        return false;
     }
 }

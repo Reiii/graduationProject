@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -129,7 +130,7 @@ public class MallController {
 
     @loginRequire
     @RequestMapping(value = "/doBuy", method = RequestMethod.GET)
-    public ModelAndView doBuy(@RequestParam("commodity_id") String commodity_id, HttpSession session){
+    public ModelAndView doBuy(@Param("commodity_id") String commodity_id, HttpSession session){
         session.setAttribute("buyItem", commodity_id);
         ModelAndView mav = new ModelAndView("confirmOrder");
         return mav;
@@ -150,7 +151,7 @@ public class MallController {
 
     @loginRequire
     @RequestMapping(value = "/submitOrder", method = RequestMethod.POST)
-    public Status submitOrder(HttpSession session, @RequestParam("buyer_phone") String phone, @RequestParam("province") String province, @RequestParam("city") String city, @RequestParam("district") String district, @RequestParam("address") String address, @RequestParam("transction") String transction){
+    public Status submitOrder(HttpSession session, @Param("buyer_phone") String phone, @Param("province") String province, @Param("city") String city, @Param("district") String district, @Param("address") String address, @Param("transction") String transction){
         String buyer_id = ((User)session.getAttribute("user")).getUid();
         String commodity_id = (String)session.getAttribute("buyItem");
         Order order = new Order();
@@ -187,6 +188,80 @@ public class MallController {
         List<Map<String, String>> list = mallService.selectToyByUser(user);
         return list;
 
+    }
+
+    @loginRequire
+    @RequestMapping(value = "/releaseToy", method = RequestMethod.GET)
+    public ModelAndView releaseToy(){
+        return new ModelAndView("releaseToy");
+    }
+
+    @loginRequire
+    @RequestMapping(value = "/doRelease", method = RequestMethod.POST)
+    public Status doRelease(HttpSession session, @Param("title") String title, @Param("province") String province, @Param("city") String city, @Param("price") String price, @Param("means_of_transction") String means_of_transction, @Param("description") String description){
+        Status status = new Status();
+        User user = (User)session.getAttribute("user");
+        Toy toy = new Toy();
+        toy.setTitle(title);
+        toy.setUid(user.getUid());
+        toy.setProvince(province);
+        toy.setCity(city);
+        toy.setPrice(new BigDecimal(price));
+        toy.setMeans_of_transction(means_of_transction);
+        toy.setDescription(description);
+        toy.setStatus("0");
+        if(mallService.addToy(toy)){
+            status.setStatus(StatusMsg.ADD_TOY_SUCCESS);
+        }else{
+            status.setStatus(StatusMsg.ADD_TOY_FAILED);
+        }
+        return status;
+    }
+
+    @loginRequire
+    @RequestMapping(value = "/cancelOrder", method = RequestMethod.POST)
+    public Status cancelOrder(@Param("order_id") String order_id, HttpSession session){
+        Status status = new Status();
+        Order order = new Order();
+        User user = (User)session.getAttribute("user");
+        order.setOrder_id(order_id);
+        if(mallService.cancelOrder(order, user)){
+            status.setStatus(StatusMsg.CHANGE_SUCCESS);
+        }else{
+            status.setStatus(StatusMsg.CHANGE_FAILED);
+        }
+        return status;
+
+    }
+
+    @loginRequire
+    @RequestMapping(value = "/confirmOrder", method = RequestMethod.POST)
+    public Status confirmOrder(@Param("order_id") String order_id, HttpSession session){
+        Status status = new Status();
+        Order order = new Order();
+        User user = (User)session.getAttribute("user");
+        order.setOrder_id(order_id);
+        if(mallService.confirmOrder(order, user)){
+            status.setStatus(StatusMsg.CHANGE_SUCCESS);
+        }else{
+            status.setStatus(StatusMsg.CHANGE_FAILED);
+        }
+        return status;
+    }
+
+    @loginRequire
+    @RequestMapping(value = "/delToy", method = RequestMethod.POST)
+    public Status delToy(@Param("commodity_id") String commodity_id, HttpSession session){
+        Status status = new Status();
+        Toy toy = new Toy();
+        toy.setCommodity_id(commodity_id);
+        User user = (User)session.getAttribute("user");
+        if(mallService.delToy(toy, user)){
+            status.setStatus(StatusMsg.DEL_SUCCESS);
+        }else{
+            status.setStatus(StatusMsg.DEL_FAILED);
+        }
+        return status;
     }
 
 }

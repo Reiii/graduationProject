@@ -21,7 +21,7 @@ public interface MallService {
      * @param user
      * @return
      */
-    boolean addToy(Toy toy, User user);
+    boolean addToy(Toy toy);
 
     /**
      * 更新玩具信息
@@ -192,5 +192,19 @@ public interface MallService {
      */
     User getUserByToy(Toy toy);
 
+    /**
+     * 取消订单
+     * @param order
+     * @return
+     */
+    boolean cancelOrder(Order order, User user);
+
+    /**
+     * 确认收货
+     * @param order
+     * @param user
+     * @return
+     */
+    boolean confirmOrder(Order order, User user);
 
 }

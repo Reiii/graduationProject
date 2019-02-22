@@ -3,9 +3,13 @@ package com.yan.service.impl;
 import com.yan.dao.ActivityMapper;
 import com.yan.domain.City_activity;
 import com.yan.domain.User;
+import com.yan.exception.ActivityException;
 import com.yan.service.ActivityService;
+import com.yan.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -16,8 +20,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * date： 2019/1/22 上午9:27
  * author： Li KaiYan
  */
-
+@Service
 public class ActivityServiceImpl implements ActivityService {
+
     @Autowired
     private ActivityMapper activityMapper;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
@@ -68,38 +73,116 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public City_activity[] getCity_activitiesByTitle(String title) {
+    public Page<City_activity> getAllCity_Activity(String page) throws ActivityException{
         City_activity city_activity = new City_activity();
+        city_activity.setStart_time(String.valueOf(new Date().getTime()));
+        int total = activityMapper.countAllActivity(city_activity);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new ActivityException(ActivityException.PAGE_OVER_LIMIT);
+        }
+        City_activity[] activities = activityMapper.selectAllActivity(city_activity, (Integer.parseInt(page) - 1) * 20);
+        Page<City_activity> activityPage = new Page<>();
+        activityPage.setCurrentPage(Integer.parseInt(page));
+        activityPage.setEndPage(total_page);
+        activityPage.setData(Arrays.asList(activities));
+        activityPage.setStartPage(1);
+        return activityPage;
+    }
+
+    @Override
+    public Page<City_activity> getCity_activitiesByTitle(String title, String page) throws ActivityException {
+        City_activity city_activity = new City_activity();
+        city_activity.setStart_time(String.valueOf(new Date().getTime()));
         city_activity.setTitle(title);
-        return activityMapper.selectActivityByTitle(city_activity);
+        int total = activityMapper.countAllActivity(city_activity);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new ActivityException(ActivityException.PAGE_OVER_LIMIT);
+        }
+        City_activity[] activities = activityMapper.selectActivityByTitle(city_activity, (Integer.parseInt(page) - 1) * 20);
+        Page<City_activity> activityPage = new Page<>();
+        activityPage.setCurrentPage(Integer.parseInt(page));
+        activityPage.setEndPage(total_page);
+        activityPage.setData(Arrays.asList(activities));
+        activityPage.setStartPage(1);
+        return activityPage;
     }
 
     @Override
-    public City_activity[] getCity_activitiesByProvince(String province) {
+    public Page<City_activity> getCity_activitiesByProvince(String province, String page) throws ActivityException {
         City_activity city_activity = new City_activity();
+        city_activity.setStart_time(String.valueOf(new Date().getTime()));
         city_activity.setProvince(province);
-        return activityMapper.selectActivityByProvince(city_activity);
+        int total = activityMapper.countAllActivity(city_activity);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new ActivityException(ActivityException.PAGE_OVER_LIMIT);
+        }
+        City_activity[] activities = activityMapper.selectActivityByProvince(city_activity, (Integer.parseInt(page) - 1) * 20);
+        Page<City_activity> activityPage = new Page<>();
+        activityPage.setCurrentPage(Integer.parseInt(page));
+        activityPage.setEndPage(total_page);
+        activityPage.setData(Arrays.asList(activities));
+        activityPage.setStartPage(1);
+        return activityPage;
     }
 
     @Override
-    public City_activity[] getCity_activitiesByCity(String city) {
+    public Page<City_activity> getCity_activitiesByCity(String city, String page) throws ActivityException {
         City_activity city_activity = new City_activity();
+        city_activity.setStart_time(String.valueOf(new Date().getTime()));
         city_activity.setCity(city);
-        return activityMapper.selectActivityByCity(city_activity);
+        int total = activityMapper.countAllActivity(city_activity);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new ActivityException(ActivityException.PAGE_OVER_LIMIT);
+        }
+        City_activity[] activities = activityMapper.selectActivityByCity(city_activity, (Integer.parseInt(page) - 1) * 20);
+        Page<City_activity> activityPage = new Page<>();
+        activityPage.setCurrentPage(Integer.parseInt(page));
+        activityPage.setEndPage(total_page);
+        activityPage.setData(Arrays.asList(activities));
+        activityPage.setStartPage(1);
+        return activityPage;
     }
 
     @Override
-    public City_activity[] getCity_activitiesByCost(String cost) {
+    public Page<City_activity> getCity_activitiesByCost(String cost, String page) throws ActivityException {
         City_activity city_activity = new City_activity();
+        city_activity.setStart_time(String.valueOf(new Date().getTime()));
         city_activity.setCost(cost);
-        return activityMapper.selectActivityByCost(city_activity);
+        int total = activityMapper.countAllActivity(city_activity);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new ActivityException(ActivityException.PAGE_OVER_LIMIT);
+        }
+        City_activity[] activities = activityMapper.selectActivityByCost(city_activity, (Integer.parseInt(page) - 1) * 20);
+        Page<City_activity> activityPage = new Page<>();
+        activityPage.setCurrentPage(Integer.parseInt(page));
+        activityPage.setEndPage(total_page);
+        activityPage.setData(Arrays.asList(activities));
+        activityPage.setStartPage(1);
+        return activityPage;
     }
 
     @Override
-    public City_activity[] getCity_activitiesByStatus(String status) {
+    public Page<City_activity> getCity_activitiesByStatus(String status, String page) throws ActivityException {
         City_activity city_activity = new City_activity();
+        city_activity.setStart_time(String.valueOf(new Date().getTime()));
         city_activity.setStatus(status);
-        return activityMapper.selectActivityByStatus(city_activity);
+        int total = activityMapper.countAllActivity(city_activity);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new ActivityException(ActivityException.PAGE_OVER_LIMIT);
+        }
+        City_activity[] activities = activityMapper.selectActivityByStatus(city_activity, (Integer.parseInt(page) - 1) * 20);
+        Page<City_activity> activityPage = new Page<>();
+        activityPage.setCurrentPage(Integer.parseInt(page));
+        activityPage.setEndPage(total_page);
+        activityPage.setData(Arrays.asList(activities));
+        activityPage.setStartPage(1);
+        return activityPage;
     }
 
     @Override

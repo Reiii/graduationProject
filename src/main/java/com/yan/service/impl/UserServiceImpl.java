@@ -69,8 +69,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean change_password(User user) {
-        User user_in_db = userMapper.selectById(user);
-        Utils.sendActive_Code(user_in_db, 1);
+        user.setActive_code(Utils.getActiveCode());
+        userMapper.update_user(user);
+        Utils.sendActive_Code(user, 2);
         return true;
     }
 

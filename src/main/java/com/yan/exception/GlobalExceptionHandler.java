@@ -37,4 +37,12 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(value = ActivityException.class)
+    public ErrorInfo<UserException> userExceptionErrorInfo(HttpServletRequest request, ActivityException ex){
+        ErrorInfo<UserException> info = new ErrorInfo<>();
+        info.setCode(ErrorInfo.ERROR);
+        info.setMsg(ex.getMessage());
+        return info;
+    }
+
 }

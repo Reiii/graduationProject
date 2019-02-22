@@ -2,6 +2,8 @@ package com.yan.service;
 
 import com.yan.domain.City_activity;
 import com.yan.domain.User;
+import com.yan.exception.ActivityException;
+import com.yan.util.Page;
 
 /**
  * Package ：com.yan.service
@@ -43,39 +45,45 @@ public interface ActivityService {
     City_activity getCity_activityById(String id);
 
     /**
+     * 获取全部同城活动
+     * @return
+     */
+    Page<City_activity> getAllCity_Activity(String page) throws ActivityException;
+
+    /**
      * 根据标题获取同城活动
      * @param title
      * @return
      */
-    City_activity[] getCity_activitiesByTitle(String title);
+    Page<City_activity> getCity_activitiesByTitle(String title, String page) throws ActivityException;
 
     /**
      * 根据省份获取同城活动
      * @param province
      * @return
      */
-    City_activity[] getCity_activitiesByProvince(String province);
+    Page<City_activity> getCity_activitiesByProvince(String province, String page) throws ActivityException;
 
     /**
      * 根据城市获取同城活动
      * @param city
      * @return
      */
-    City_activity[] getCity_activitiesByCity(String city);
+    Page<City_activity> getCity_activitiesByCity(String city, String page) throws ActivityException;
 
     /**
      * 根据费用获取同城活动
      * @param cost
      * @return
      */
-    City_activity[] getCity_activitiesByCost(String cost);
+    Page<City_activity> getCity_activitiesByCost(String cost, String page) throws ActivityException;
 
     /**
      * 根据状态获取同城活动
      * @param status
      * @return
      */
-    City_activity[] getCity_activitiesByStatus(String status);
+    Page<City_activity> getCity_activitiesByStatus(String status, String page) throws ActivityException;
 
     /**
      * 添加参与者

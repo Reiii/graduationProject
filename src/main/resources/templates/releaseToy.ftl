@@ -10,7 +10,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
 	 <script src="https://cdn.bootcss.com/wangEditor/10.0.13/wangEditor.js"></script>
-	 <script src="./city.js"></script>
+	 <script src="/js/city.js"></script>
 </head>
 <body>
 	<div id="release">
@@ -38,7 +38,7 @@
 						<el-radio-group v-model="releaseForm.means_of_transction">
 							<el-radio label="0">线上交易</el-radio>
 							<el-radio label="1">线下交易</el-radio>
-							<el-radio label="3">线上线下均可</el-radio>
+							<el-radio label="2">线上线下均可</el-radio>
 						</el-radio-group>
 					</el-form-item>
 					<el-form-item label="玩具图片">
@@ -159,6 +159,7 @@
 		},
 		methods: {
 			handleSubmit(){
+			    var win = this;
 				this.$refs.releaseForm.validate((valid) => {
 	                if (valid) {
 	                    axios({
@@ -193,7 +194,7 @@
                                 location.href = 'http://localhost:8080/user/userinfo';
                         	});
                         	}else{
-								win.$alert(response.data.status, '错误', {
+								win.$alert(response.data.status, '提示', {
 									confirmButtonText: '确定'
 								});
                         	}

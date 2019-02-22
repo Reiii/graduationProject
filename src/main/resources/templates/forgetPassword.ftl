@@ -75,6 +75,7 @@
 		},
 		methods: {
 			vertifyEmail(){
+			    var win = this;
 				axios.get("http://localhost:8080/user/setPassword/setEmail",{
                     params:{
                         email: this.email
@@ -87,12 +88,12 @@
 							this.step1Style.display = "none";
 							this.step2Style.display = "block";
 						}else{
-							this.$alter(msg, "错误", {
+							win.$alert(msg, "错误", {
 								confirmButtonText: '确定'
 							});
 						}
 					}).catch(function(error){
-						this.$alter("无法连接网络", "错误", {
+						win.$alert("无法连接网络", "错误", {
 							confirmButtonText: '确定'
 						});
 					})

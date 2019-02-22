@@ -48,4 +48,12 @@ public class StatusMsg {
 
     public static final String ORDER_FAILED = "下单失败,该商品已出售";
 
+    public static final String ADD_TOY_SUCCESS = "添加成功";
+
+    public static final String ADD_TOY_FAILED = "添加失败";
+
+    public static final String DEL_SUCCESS = "删除成功";
+
+    public static final String DEL_FAILED = "删除失败";
+
 }

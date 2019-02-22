@@ -50,7 +50,7 @@
 										<label>{{ personalForm.reg_time }}</label>
 									</el-form-item>
 									<el-form-item>
-										<el-button type="primary">修改个人信息</el-button>
+										<el-button type="primary" @click="changePassword">修改密码</el-button>
 									</el-form-item>
 								</el-form>
 							</el-col>
@@ -83,9 +83,22 @@
 						    	label="订单状态"
 						    	width="180">
 						    </el-table-column>
+                            <el-table-column
+                                    label="操作"
+                                    width="100">
+                                <template slot-scope="scope" >
+									<el-button v-if="scope.row.status == '正在进行'" type="text" @click="cancelOrder(scope.row)">取消订单</el-button>
+                                    <el-button v-if="scope.row.status == '正在进行'" type="text" @click="confirmOrder(scope.row)">确认收货</el-button>
+                                </template>
+                            </el-table-column>
 						  </el-table>
 				    </el-tab-pane>
 				    <el-tab-pane label="我的玩具">
+                        <el-row>
+                            <el-col>
+                                <el-button type="primary" @click="releaseToy">发布玩具</el-button>
+                            </el-col>
+                        </el-row>
                         <el-table :data="myToys" stripe>
                             <el-table-column
                                     prop="title"
@@ -106,6 +119,15 @@
                                     prop="status"
                                     label="状态"
                                     width="180">
+                            </el-table-column>
+							<el-table-column
+                                    label="操作"
+                                    width="200">
+                                <template slot-scope="scope">
+                                    <el-button v-if="scope.row.status='未售出'" type="text" @click="viewToy(scope.row)">查看</el-button>
+                                    <el-button v-if="scope.row.status='未售出'" type="text" @click="editToy(scope.row)">编辑</el-button>
+                                    <el-button v-if="scope.row.status='未售出'" type="text" @click.native.prevent="delToy(scope.row, scope.$index, myToys)">删除</el-button>
+                                </template>
                             </el-table-column>
                         </el-table>
 					</el-tab-pane>
@@ -170,7 +192,133 @@
                     confirmButtonText: '确定'
                 });
             });
-        }
+        },
+		methods: {
+            releaseToy(){
+                window.open("http://localhost:8080/mall/releaseToy", "_blank");
+            },
+			changePassword(){
+                var win = this;
+                axios.get("http://localhost:8080/user/setPassword/change").then((response) => {
+                    this.$alert(response.data.status, "提示", {
+						confirmButtonText: '确定'
+					});
+				}).catch(function(error) {
+                    console.log("lost connection.")
+                    this.$alert('网络连接丢失', '错误', {
+                        confirmButtonText: '确定'
+                    });
+                });
+			},
+			cancelOrder(row){
+				axios({
+					method: 'post',
+					url: 'http://localhost:8080/mall/cancelOrder',
+					data: {
+					    order_id: row.order_id
+					},
+                    transformRequest: [
+                        function (data) {
+                            // Do whatever you want to transform the data
+                            let ret = ''
+                            for (let it in data) {
+                                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                            }
+                            return ret
+                        }
+                    ],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+				}).then((response) => {
+				    if(response.data.status == '修改成功'){
+				        row.status = '已取消';
+					}
+					this.$alert(response.data.status, '提示', {
+					    confirmButtonText: '确定'
+					});
+				}).catch(function(error) {
+                    console.log("lost connection.")
+                    this.$alert('网络连接丢失', '错误', {
+                        confirmButtonText: '确定'
+                    });
+				});
+			},
+			confirmOrder(row){
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:8080/mall/confirmOrder',
+                    data: {
+                        order_id: row.order_id
+                    },
+                    transformRequest: [
+                        function (data) {
+                            // Do whatever you want to transform the data
+                            let ret = ''
+                            for (let it in data) {
+                                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                            }
+                            return ret
+                        }
+                    ],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then((response) => {
+                    if(response.data.status == '修改成功'){
+                    row.status = '已完成';
+                }
+                this.$alert(response.data.status, '提示', {
+                    confirmButtonText: '确定'
+                });
+            }).catch(function(error) {
+                    console.log("lost connection.")
+                    this.$alert('网络连接丢失', '错误', {
+                        confirmButtonText: '确定'
+                    });
+                });
+			},
+			viewToy(row){
+                window.open("http://localhost:8080/mall/item?commodity_id=" + row.commodity_id);
+			},
+			editToy(row){
+
+			},
+			delToy(row, index, data){
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:8080/mall/delToy',
+                    data: {
+                        commodity_id: row.commodity_id
+                    },
+                    transformRequest: [
+                        function (data) {
+                            // Do whatever you want to transform the data
+                            let ret = ''
+                            for (let it in data) {
+                                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                            }
+                            return ret
+                        }
+                    ],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then((response) => {
+                    if(response.data.status == '删除成功'){
+                    data.splice(index, 1);
+                }
+                this.$alert(response.data.status, '提示', {
+                    confirmButtonText: '确定'
+                });
+            }).catch(function(error) {
+                    console.log("lost connection.")
+                    this.$alert('网络连接丢失', '错误', {
+                        confirmButtonText: '确定'
+                    });
+                });
+			}
+		}
 	})
 </script>
 </html>

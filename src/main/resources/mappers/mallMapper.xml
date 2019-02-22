@@ -52,8 +52,8 @@
     </update>
     
     <insert id="addToy" parameterType="com.yan.domain.Toy">
-        insert into toy (title, description, means_of_transction, province, city, status, price)
-          values (#{title}, #{description}, #{means_of_transction}, #{province}, #{city}, #{status}, #{price})
+        insert into toy (uid, title, description, means_of_transction, province, city, status, price)
+          values (#{uid}, #{title}, #{description}, #{means_of_transction}, #{province}, #{city}, #{status}, #{price})
     </insert>
     
     <delete id="delToy" parameterType="com.yan.domain.Toy">
@@ -67,4 +67,20 @@
     <select id="selectToyByUser" parameterType="com.yan.domain.User" resultType="com.yan.domain.Toy">
         select * from toy where uid = #{uid}
     </select>
+    
+    <select id="selectOrderById" parameterType="com.yan.domain.Order" resultType="com.yan.domain.Order">
+        select * from order_info where order_id = #{order_id}
+    </select>
+    
+    <update id="updateOrder" parameterType="com.yan.domain.Order">
+        update order_info set price = #{price},
+        buyer_phone = #{buyer_phone},
+        province = #{province},
+        city = #{city},
+        district = #{district},
+        address = #{address},
+        status = #{status},
+        means_of_transction = #{means_of_transction}
+    </update>
+
 </mapper>

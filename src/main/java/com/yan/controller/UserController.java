@@ -190,18 +190,16 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/setPassword/verify", method = RequestMethod.GET)
-    public Status verify(@RequestParam("uid") String uid, @RequestParam("code") String code, HttpSession session){
+    public ModelAndView verify(@RequestParam("uid") String uid, @RequestParam("code") String code, HttpSession session){
         Status status = new Status();
         User user = new User();
         user.setUid(uid);
         user.setActive_code(code);
-        if(userService.verify_code(user)){
+        if(userService.verify_code(user)) {
             session.setAttribute("changePassword", uid);
-            status.setStatus(StatusMsg.ALLOW_CHANGE);
-        }else{
-            status.setStatus(StatusMsg.DENY_CHANGE);
+            return new ModelAndView("setPassword");
         }
-        return status;
+        return new ModelAndView("error");
     }
 
     /**
@@ -282,6 +280,8 @@ public class UserController {
         }
         return status;
     }
+
+
 
 
 }

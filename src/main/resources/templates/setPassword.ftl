@@ -96,10 +96,10 @@
                                 'Content-Type': 'application/x-www-form-urlencoded'
                             }
 						}).then(function(response){
-								win.$alert(response.data.msg, '提示', {
+								win.$alert(response.data.status, '提示', {
 							        confirmButtonText: '确定'
 								}).then(() => {
-								    if(response.data.msg == '修改成功'){
+								    if(response.data.status == '修改成功'){
 										location.href = 'http://localhost:8080/user/login';
 									}
 								})
