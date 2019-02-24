@@ -4,6 +4,7 @@ import com.yan.domain.Post;
 import com.yan.domain.Subject_area;
 import com.yan.domain.Theme_sticker;
 import com.yan.domain.User;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * Package ：com.yan.dao
@@ -11,7 +12,7 @@ import com.yan.domain.User;
  * date： 2019/1/7 下午3:51
  * author： Li KaiYan
  */
-
+@Mapper
 public interface ForumMapper {
 
     /**

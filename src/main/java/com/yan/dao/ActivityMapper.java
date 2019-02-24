@@ -2,6 +2,7 @@ package com.yan.dao;
 
 import com.yan.domain.City_activity;
 import com.yan.domain.User;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -10,7 +11,7 @@ import org.apache.ibatis.annotations.Param;
  * date： 2019/1/7 下午5:22
  * author： Li KaiYan
  */
-
+@Mapper
 public interface ActivityMapper {
 
     /**
@@ -96,6 +97,41 @@ public interface ActivityMapper {
      * @return
      */
     int countAllActivity(City_activity city_activity);
+
+    /**
+     * 根据关键字获得活动数量
+     * @param city_activity
+     * @return
+     */
+    int countActivityByKeyword(City_activity city_activity);
+
+    /**
+     * 根据省份获得活动数量
+     * @param city_activity
+     * @return
+     */
+    int countActivityByProvince(City_activity city_activity);
+
+    /**
+     * 根据城市获得活动数量
+     * @param city_activity
+     * @return
+     */
+    int countActivityByCity(City_activity city_activity);
+
+    /**
+     * 根据费用获得活动数量
+     * @param city_activity
+     * @return
+     */
+    int countActivityByCost(City_activity city_activity);
+
+    /**
+     * 根据活动状态获得活动数量
+     * @param city_activity
+     * @return
+     */
+    int countActivityByStatus(City_activity city_activity);
 
     /**
      * 添加参与者

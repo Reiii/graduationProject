@@ -7,6 +7,7 @@ import com.yan.domain.Theme_sticker;
 import com.yan.domain.User;
 import com.yan.service.ForumService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.context.Theme;
 
 import java.util.Date;
@@ -18,7 +19,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * date： 2019/1/21 上午10:40
  * author： Li KaiYan
  */
-
+@Service
 public class ForumServiceImpl implements ForumService {
     @Autowired
     private ForumMapper forumMapper;

@@ -32,35 +32,55 @@
     </select>
     
     <select id="selectAllActivity" resultType="com.yan.domain.City_activity">
-        select * from city_activity limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where end_time > #{city_activity.start_time} limit #{start}, 20
     </select>
     
     <select id="selectActivityByTitle" resultType="com.yan.domain.City_activity">
-        select * from city_activity where title like "%"#{city_activity.title}"%" and start_time > #{city_activity.start_time} limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where title like "%"#{city_activity.title}"%" and end_time > #{city_activity.start_time} limit #{start}, 20
     </select>
     
     <select id="selectActivityByTime" resultType="com.yan.domain.City_activity">
-        select * from city_activity where start_time > #{city_activity.start_time} limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where end_time > #{city_activity.start_time} limit #{start}, 20
     </select>
     
     <select id="selectActivityByProvince" resultType="com.yan.domain.City_activity">
-        select * from city_activity where province = #{city_activity.province} and start_time > #{city_activity.start_time} limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where province = #{city_activity.province} and end_time > #{city_activity.start_time} limit #{start}, 20
     </select>
 
     <select id="selectActivityByCity" resultType="com.yan.domain.City_activity">
-        select * from city_activity where city = #{city_activity.city} and start_time > #{city_activity.start_time} limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where city = #{city_activity.city} and end_time > #{city_activity.start_time} limit #{start}, 20
     </select>
 
     <select id="selectActivityByCost" resultType="com.yan.domain.City_activity">
-        select * from city_activity where #{city_activity.province} >= cost and start_time > #{city_activity.start_time} limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where #{city_activity.cost} >= cost and end_time > #{city_activity.start_time} limit #{start}, 20
     </select>
 
     <select id="selectActivityByStatus" resultType="com.yan.domain.City_activity">
-        select * from city_activity where status = #{city_activity.status} limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where status = #{city_activity.status} limit #{start}, 20
     </select>
 
-    <select id="countAllActivity" resultType="com.yan.domain.City_activity">
-        select count(*) from city_activity where start_time > #{city_activity.start_time} limit #{start}, 20
+    <select id="countAllActivity" resultType="java.lang.Integer">
+        select count(*) from city_activity where end_time > #{start_time}
+    </select>
+
+    <select id="countActivityByKeyword" resultType="java.lang.Integer">
+        select count(*) from city_activity where title like "%"#{title}"%" and end_time > #{start_time}
+    </select>
+
+    <select id="countActivityByProvince" resultType="java.lang.Integer">
+        select count(*) from city_activity where province = #{province} and end_time > #{start_time}
+    </select>
+
+    <select id="countActivityByCity" resultType="java.lang.Integer">
+        select count(*) from city_activity where city = #{city} and end_time > #{start_time}
+    </select>
+    
+    <select id="countActivityByCost" resultType="java.lang.Integer">
+         select count(*) from city_activity where #{cost} >= cost and end_time > #{start_time}
+    </select>
+
+    <select id="countActivityByStatus" resultType="java.lang.Integer">
+        select count(*) from city_activity where status = #{status}
     </select>
 
 

@@ -131,6 +131,44 @@
                             </el-table-column>
                         </el-table>
 					</el-tab-pane>
+                    <el-tab-pane label="我的活动">
+                        <el-row>
+                            <el-col>
+                                <el-button type="primary" @click="releaseActivity">发布活动</el-button>
+                            </el-col>
+                        </el-row>
+                        <el-table :data="myActivity" stripe>
+                            <el-table-column
+                                    prop="title"
+                                    label="标题"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="start_time"
+                                    label="开始时间"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="end_time"
+                                    label="结束时间"
+                                    width=180>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="time"
+                                    label="创建时间"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    label="操作"
+                                    width="200">
+                                <template slot-scope="scope">
+                                    <el-button v-if="scope.row.status!='3'" type="text" @click="viewToy(scope.row)">查看</el-button>
+                                    <el-button v-if="scope.row.status='0'" type="text" @click="editToy(scope.row)">编辑</el-button>
+                                    <el-button v-if="scope.row.status='0'" type="text" @click.native.prevent="delToy(scope.row, scope.$index, myToys)">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-tab-pane>
 				    <el-tab-pane label="我的帖子">我的帖子</el-tab-pane>
 				 </el-tabs>
 			</el-main>
@@ -154,7 +192,8 @@
 					reg_time: "1993-4-3"
 				},
 				myOrders: "",
-				myToys: ''
+				myToys: '',
+                myActivity: ''
 			}
 		},
         mounted(){
@@ -192,6 +231,15 @@
                     confirmButtonText: '确定'
                 });
             });
+            axios.get("http://localhost:8080/activity/myActivity")
+                    .then((response) => {
+                        this.myActivity = response.data;
+            }).catch(function(error){
+                console.log("lost connection.")
+                this.$alert('网络连接丢失', '错误', {
+                    confirmButtonText: '确定'
+                });
+            })
         },
 		methods: {
             releaseToy(){

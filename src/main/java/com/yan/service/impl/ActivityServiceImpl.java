@@ -95,7 +95,7 @@ public class ActivityServiceImpl implements ActivityService {
         City_activity city_activity = new City_activity();
         city_activity.setStart_time(String.valueOf(new Date().getTime()));
         city_activity.setTitle(title);
-        int total = activityMapper.countAllActivity(city_activity);
+        int total = activityMapper.countActivityByKeyword(city_activity);
         int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
         if(Integer.parseInt(page) > total_page){
             throw new ActivityException(ActivityException.PAGE_OVER_LIMIT);
@@ -114,7 +114,7 @@ public class ActivityServiceImpl implements ActivityService {
         City_activity city_activity = new City_activity();
         city_activity.setStart_time(String.valueOf(new Date().getTime()));
         city_activity.setProvince(province);
-        int total = activityMapper.countAllActivity(city_activity);
+        int total = activityMapper.countActivityByProvince(city_activity);
         int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
         if(Integer.parseInt(page) > total_page){
             throw new ActivityException(ActivityException.PAGE_OVER_LIMIT);
@@ -133,7 +133,7 @@ public class ActivityServiceImpl implements ActivityService {
         City_activity city_activity = new City_activity();
         city_activity.setStart_time(String.valueOf(new Date().getTime()));
         city_activity.setCity(city);
-        int total = activityMapper.countAllActivity(city_activity);
+        int total = activityMapper.countActivityByCity(city_activity);
         int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
         if(Integer.parseInt(page) > total_page){
             throw new ActivityException(ActivityException.PAGE_OVER_LIMIT);
@@ -152,7 +152,7 @@ public class ActivityServiceImpl implements ActivityService {
         City_activity city_activity = new City_activity();
         city_activity.setStart_time(String.valueOf(new Date().getTime()));
         city_activity.setCost(cost);
-        int total = activityMapper.countAllActivity(city_activity);
+        int total = activityMapper.countActivityByCost(city_activity);
         int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
         if(Integer.parseInt(page) > total_page){
             throw new ActivityException(ActivityException.PAGE_OVER_LIMIT);
@@ -171,7 +171,7 @@ public class ActivityServiceImpl implements ActivityService {
         City_activity city_activity = new City_activity();
         city_activity.setStart_time(String.valueOf(new Date().getTime()));
         city_activity.setStatus(status);
-        int total = activityMapper.countAllActivity(city_activity);
+        int total = activityMapper.countActivityByStatus(city_activity);
         int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
         if(Integer.parseInt(page) > total_page){
             throw new ActivityException(ActivityException.PAGE_OVER_LIMIT);
