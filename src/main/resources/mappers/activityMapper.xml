@@ -58,6 +58,10 @@
     <select id="selectActivityByStatus" resultType="com.yan.domain.City_activity">
         select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where status = #{city_activity.status} limit #{start}, 20
     </select>
+    
+    <select id="selectActivityByUser" resultType="com.yan.domain.City_activity">
+         select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where uid = #{uid}
+    </select>
 
     <select id="countAllActivity" resultType="java.lang.Integer">
         select count(*) from city_activity where end_time > #{start_time}

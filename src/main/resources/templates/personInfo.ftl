@@ -245,6 +245,9 @@
             releaseToy(){
                 window.open("http://localhost:8080/mall/releaseToy", "_blank");
             },
+            releaseActivity(){
+                window.open("http://localhost:8080/activity/releaseActivity", "_blank");
+            },
 			changePassword(){
                 var win = this;
                 axios.get("http://localhost:8080/user/setPassword/change").then((response) => {

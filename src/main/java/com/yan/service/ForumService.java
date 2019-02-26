@@ -4,6 +4,8 @@ import com.yan.domain.Post;
 import com.yan.domain.Subject_area;
 import com.yan.domain.Theme_sticker;
 import com.yan.domain.User;
+import com.yan.exception.ForumException;
+import com.yan.util.Page;
 
 /**
  * Package ：com.yan.service
@@ -40,10 +42,10 @@ public interface ForumService {
 
     /**
      * 根据id获取主题区域
-     * @param id
+     * @param subject_area
      * @return
      */
-    Subject_area getSubject_areaById(String id);
+    Subject_area getSubject_areaById(Subject_area subject_area);
 
     /**
      * 获取全部主题区域
@@ -77,32 +79,26 @@ public interface ForumService {
 
     /**
      * 根据id获取主题贴
-     * @param id
+     * @param theme_sticker
      * @return
      */
-    Theme_sticker getTheme_stickerById(String id);
+    Theme_sticker getTheme_stickerById(Theme_sticker theme_sticker);
 
     /**
      * 根据主题区域获取主题贴
-     * @param id
+     * @param subject_area
+     * @param page
      * @return
      */
-    Theme_sticker[] getTheme_stickersBySubject_id(String id);
+    Page<Theme_sticker> getTheme_stickersBySubject_id(Subject_area subject_area, String page) throws ForumException;
 
     /**
      * 根据标题获取主题贴
-     * @param title
+     * @param theme_sticker
+     * @param page
      * @return
      */
-    Theme_sticker[] getTheme_stickerByTitle(String title);
-
-    /**
-     * 根据分类获取指定主题区域中的主题贴
-     * @param classification
-     * @param subject_id
-     * @return
-     */
-    Theme_sticker[] getTheme_stickerByClassification(String classification, String subject_id);
+    Page<Theme_sticker> getTheme_stickerByTitle(Theme_sticker theme_sticker, String page) throws ForumException;
 
     /**
      * 根据用户获取主题贴
@@ -113,11 +109,12 @@ public interface ForumService {
 
     /**
      * 根据主题贴类型（普通、加精）获取指定区域中的主题贴
-     * @param type
-     * @param subject_id
+     * @param subject_area
+     * @param theme_sticker
+     * @param page
      * @return
      */
-    Theme_sticker[] getTheme_stickerByType(String type, String subject_id);
+    Page<Theme_sticker> getTheme_stickerByType(Subject_area subject_area, Theme_sticker theme_sticker, String page) throws ForumException;
 
     /**
      * 根据主题贴状态获取主题贴
@@ -125,6 +122,7 @@ public interface ForumService {
      * @return
      */
     Theme_sticker[] getTheme_stickerByStatus(String status);
+
 
     /**
      * 添加帖子
@@ -152,30 +150,30 @@ public interface ForumService {
 
     /**
      * 根据id获取帖子
-     * @param id
+     * @param post
      * @return
      */
-    Post getPostById(String id);
+    Post getPostById(Post post);
 
     /**
      * 根据主题贴获取帖子
      * @param sticker
      * @return
      */
-    Post[] getPostsByTheme_sticker(Theme_sticker sticker);
+    Page<Post> getPostsByTheme_sticker(Theme_sticker sticker, String page) throws ForumException;
 
     /**
      * 根据用户获取主题贴
      * @param user
      * @return
      */
-    Post[] getPostsByUser(User user);
+    Post[] getPostsByUser(User user) throws ForumException;
 
     /**
      * 根据状态获取帖子
      * @param status
      * @return
      */
-    Post[] getPostsByStatus(String status);
+    Post[] getPostsByStatus(String status) throws ForumException;
 
 }

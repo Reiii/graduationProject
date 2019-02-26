@@ -5,11 +5,14 @@ import com.yan.domain.Post;
 import com.yan.domain.Subject_area;
 import com.yan.domain.Theme_sticker;
 import com.yan.domain.User;
+import com.yan.exception.ForumException;
 import com.yan.service.ForumService;
+import com.yan.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.context.Theme;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -62,9 +65,7 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public Subject_area getSubject_areaById(String id) {
-        Subject_area subject_area = new Subject_area();
-        subject_area.setSubject_id(id);
+    public Subject_area getSubject_areaById(Subject_area subject_area) {
         return forumMapper.selectSubjectAreaById(subject_area);
     }
 
@@ -129,9 +130,7 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public Theme_sticker getTheme_stickerById(String id) {
-        Theme_sticker theme_sticker = new Theme_sticker();
-        theme_sticker.setTheme_id(id);
+    public Theme_sticker getTheme_stickerById(Theme_sticker theme_sticker) {
         lock.writeLock().lock();
         try{
             Theme_sticker sticker_in_db = forumMapper.selectThemeStickerById(theme_sticker);
@@ -147,45 +146,64 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public Theme_sticker[] getTheme_stickersBySubject_id(String id) {
-        Subject_area subject_area = new Subject_area();
-        subject_area.setSubject_id(id);
-        return forumMapper.selectThemeStickerBySubjectArea(subject_area);
+    public Page<Theme_sticker> getTheme_stickersBySubject_id(Subject_area subject_area, String page) throws ForumException{
+        int total = forumMapper.countStickerBySubjectArea(subject_area);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new ForumException(ForumException.PAGE_OVER_LIMIT);
+        }
+        Theme_sticker[] stickers = forumMapper.selectThemeStickerBySubjectArea(subject_area, (Integer.parseInt(page) - 1) * 20);
+        Page<Theme_sticker> stickerPage = new Page<>();
+        stickerPage.setCurrentPage(Integer.parseInt(page));
+        stickerPage.setStartPage(1);
+        stickerPage.setEndPage(total_page);
+        stickerPage.setData(Arrays.asList(stickers));
+        return stickerPage;
     }
 
     @Override
-    public Theme_sticker[] getTheme_stickerByTitle(String title) {
-        Theme_sticker theme_sticker = new Theme_sticker();
-        theme_sticker.setTitle(title);
-        return forumMapper.selectThemeStickerByTitle(theme_sticker);
-    }
-
-    @Override
-    public Theme_sticker[] getTheme_stickerByClassification(String classification, String subject_id) {
-        Theme_sticker theme_sticker = new Theme_sticker();
-        theme_sticker.setSubject_id(subject_id);
-        theme_sticker.setClassification(classification);
-        return forumMapper.selectThemeStickerByTitle(theme_sticker);
+    public Page<Theme_sticker> getTheme_stickerByTitle(Theme_sticker theme_sticker, String page) throws ForumException {
+        int total = forumMapper.countStickerByTitle(theme_sticker);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new ForumException(ForumException.PAGE_OVER_LIMIT);
+        }
+        Theme_sticker[] stickers = forumMapper.selectThemeStickerByTitle(theme_sticker, (Integer.parseInt(page) - 1) * 20);
+        Page<Theme_sticker> stickerPage = new Page<>();
+        stickerPage.setCurrentPage(Integer.parseInt(page));
+        stickerPage.setStartPage(1);
+        stickerPage.setEndPage(total_page);
+        stickerPage.setData(Arrays.asList(stickers));
+        return stickerPage;
     }
 
     @Override
     public Theme_sticker[] getTheme_stickerByUser(User user) {
-        return forumMapper.selectThemeStickerByUser(user);
+        Theme_sticker[] stickers = forumMapper.selectThemeStickerByUser(user);
+        return stickers;
     }
 
     @Override
-    public Theme_sticker[] getTheme_stickerByType(String type, String subject_id) {
-        Theme_sticker theme_sticker = new Theme_sticker();
-        theme_sticker.setType(type);
-        theme_sticker.setSubject_id(subject_id);
-        return forumMapper.selectThemeStickerByTitle(theme_sticker);
+    public Page<Theme_sticker> getTheme_stickerByType(Subject_area subject_area, Theme_sticker theme_sticker, String page) throws ForumException{
+        int total = forumMapper.countStickerByType(subject_area, theme_sticker);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new ForumException(ForumException.PAGE_OVER_LIMIT);
+        }
+        Theme_sticker[] stickers = forumMapper.selectThemeStickerByType(theme_sticker, (Integer.parseInt(page) - 1) * 20);
+        Page<Theme_sticker> stickerPage = new Page<>();
+        stickerPage.setCurrentPage(Integer.parseInt(page));
+        stickerPage.setStartPage(1);
+        stickerPage.setEndPage(total_page);
+        stickerPage.setData(Arrays.asList(stickers));
+        return stickerPage;
     }
 
     @Override
     public Theme_sticker[] getTheme_stickerByStatus(String status) {
         Theme_sticker theme_sticker = new Theme_sticker();
         theme_sticker.setStatus(status);
-        return forumMapper.selectThemeStickerByTitle(theme_sticker);
+        return forumMapper.selectThemeStickerByStatus(theme_sticker);
     }
 
     @Override
@@ -260,15 +278,24 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public Post getPostById(String id) {
-        Post post = new Post();
-        post.setPost_id(id);
+    public Post getPostById(Post post) {
         return forumMapper.selectPostById(post);
     }
 
     @Override
-    public Post[] getPostsByTheme_sticker(Theme_sticker sticker) {
-        return forumMapper.selectPostByThemeSticker(sticker);
+    public Page<Post> getPostsByTheme_sticker(Theme_sticker theme_sticker, String page) throws ForumException{
+        int total = forumMapper.countPostByThemeSticker(theme_sticker);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new ForumException(ForumException.PAGE_OVER_LIMIT);
+        }
+        Post[] posts = forumMapper.selectPostByThemeSticker(theme_sticker, (Integer.parseInt(page) - 1) * 20);
+        Page<Post> postPage = new Page<>();
+        postPage.setCurrentPage(Integer.parseInt(page));
+        postPage.setStartPage(1);
+        postPage.setEndPage(total_page);
+        postPage.setData(Arrays.asList(posts));
+        return postPage;
     }
 
     @Override
@@ -282,4 +309,6 @@ public class ForumServiceImpl implements ForumService {
         post.setStatus(status);
         return forumMapper.selectPostByStatus(post);
     }
+
+
 }

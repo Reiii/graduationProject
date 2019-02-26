@@ -100,6 +100,8 @@ public class ActivityController {
         activity.setDetail(detail);
         activity.setCost(cost);
         activity.setTime(String.valueOf(new Date().getTime()));
+        activity.setParticipants_num("0");
+        activity.setStatus("0");
         if(activityService.addCity_activity(activity, user)){
             status.setStatus(StatusMsg.ADD_TOY_SUCCESS);
         }else{

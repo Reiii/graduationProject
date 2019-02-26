@@ -45,4 +45,12 @@ public class GlobalExceptionHandler {
         return info;
     }
 
+    @ExceptionHandler(value = ForumException.class)
+    public ErrorInfo<UserException> forumExceptionErrorInfo(HttpServletRequest request, ForumException ex){
+        ErrorInfo<UserException> info = new ErrorInfo<>();
+        info.setCode(ErrorInfo.ERROR);
+        info.setMsg(ex.getMessage());
+        return info;
+    }
+
 }

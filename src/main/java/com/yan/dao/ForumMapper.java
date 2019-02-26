@@ -5,6 +5,7 @@ import com.yan.domain.Subject_area;
 import com.yan.domain.Theme_sticker;
 import com.yan.domain.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * Package ：com.yan.dao
@@ -20,21 +21,21 @@ public interface ForumMapper {
      * @param subject_area
      * @return
      */
-    String addSubjectArea(Subject_area subject_area);
+    int addSubjectArea(Subject_area subject_area);
 
     /**
      * 删除主题区域
      * @param subject_area
      * @return
      */
-    String delSubjectArea(Subject_area subject_area);
+    int delSubjectArea(Subject_area subject_area);
 
     /**
      * 更新主题区域
      * @param subject_area
      * @return
      */
-    String updateSubjectArea(Subject_area subject_area);
+    int updateSubjectArea(Subject_area subject_area);
 
     /**
      * 根据Id选择主题区域
@@ -54,21 +55,21 @@ public interface ForumMapper {
      * @param theme_sticker
      * @return
      */
-    String addThemeSticker(Theme_sticker theme_sticker);
+    int addThemeSticker(Theme_sticker theme_sticker);
 
     /**
      * 删除主题贴
      * @param theme_sticker
      * @return
      */
-    String delThemeSticker(Theme_sticker theme_sticker);
+    int delThemeSticker(Theme_sticker theme_sticker);
 
     /**
      * 更新主题贴
      * @param theme_sticker
      * @return
      */
-    String updateThemeSticker(Theme_sticker theme_sticker);
+    int updateThemeSticker(Theme_sticker theme_sticker);
 
     /**
      * 根据Id选择主题贴
@@ -82,14 +83,14 @@ public interface ForumMapper {
      * @param theme_sticker
      * @return
      */
-    Theme_sticker[] selectThemeStickerByType(Theme_sticker theme_sticker);
+    Theme_sticker[] selectThemeStickerByType(@Param("theme_sticker") Theme_sticker theme_sticker, @Param("start") int start);
 
     /**
      * 根据主题区域选择主题贴
      * @param subject_area
      * @return
      */
-    Theme_sticker[] selectThemeStickerBySubjectArea(Subject_area subject_area);
+    Theme_sticker[] selectThemeStickerBySubjectArea(@Param("subject_area") Subject_area subject_area, @Param("start") int start);
 
     /**
      * 根据用户选择主题贴
@@ -100,31 +101,67 @@ public interface ForumMapper {
 
     /**
      * 根据标题选择主题贴
-     * @param title
+     * @param theme_sticker
+     * @Param page
      * @return
      */
-    Theme_sticker[] selectThemeStickerByTitle(Theme_sticker title);
+    Theme_sticker[] selectThemeStickerByTitle(@Param("theme_sticker") Theme_sticker theme_sticker, @Param("start") int start);
+
+    /**
+     * 根据主题贴状态选择主题贴
+     * @param theme_sticker
+     * @return
+     */
+    Theme_sticker[] selectThemeStickerByStatus(@Param("theme_sticker") Theme_sticker theme_sticker);
+
+    /**
+     * 主题区域的主题贴数量
+     * @param subject_area
+     * @return
+     */
+    int countStickerBySubjectArea(Subject_area subject_area);
+
+    /**
+     * 根据标题获取主题贴数量
+     * @param theme_sticker
+     * @return
+     */
+    int countStickerByTitle(Theme_sticker theme_sticker);
+
+    /**
+     * 根据用户获取主题贴数量
+     * @param user
+     * @return
+     */
+    int countStickerByUser(User user);
+
+    /**
+     * 根据类型获取主题贴数量
+     * @param theme_sticker
+     * @return
+     */
+    int countStickerByType(Subject_area subject_area, Theme_sticker theme_sticker);
 
     /**
      * 增加帖子
      * @param post
      * @return
      */
-    String addPost(Post post);
+    int addPost(Post post);
 
     /**
      * 删除帖子
      * @param post
      * @return
      */
-    String delPost(Post post);
+    int delPost(Post post);
 
     /**
      * 更新帖子
      * @param post
      * @return
      */
-    String updatePost(Post post);
+    int updatePost(Post post);
 
     /**
      * 根据Id选择帖子
@@ -138,7 +175,7 @@ public interface ForumMapper {
      * @param theme_sticker
      * @return
      */
-    Post[] selectPostByThemeSticker(Theme_sticker theme_sticker);
+    Post[] selectPostByThemeSticker(@Param("theme_sticker") Theme_sticker theme_sticker, @Param("start") int start);
 
     /**
      * 根据用户选择帖子
@@ -153,5 +190,13 @@ public interface ForumMapper {
      * @return
      */
     Post[] selectPostByStatus(Post post);
+
+    /**
+     * 根据主题贴获取帖子数量
+     * @param theme_sticker
+     * @return
+     */
+    int countPostByThemeSticker(@Param("theme_sticker") Theme_sticker theme_sticker);
+
 
 }
