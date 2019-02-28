@@ -2,12 +2,14 @@ package com.yan.controller;
 
 import com.yan.domain.Subject_area;
 import com.yan.domain.Theme_sticker;
+import com.yan.exception.ForumException;
 import com.yan.service.impl.ForumServiceImpl;
 import com.yan.util.Page;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -54,11 +56,12 @@ public class ForumController {
     }
 
     @RequestMapping(value = "/getStickers", method = RequestMethod.GET)
-    public Page<Theme_sticker> getStickers(HttpSession session, @Param("page") String page){
+    public Page<Theme_sticker> getStickers(HttpSession session, @RequestParam(value = "page", defaultValue = "1") String page) throws ForumException {
         String subject_id = (String)session.getAttribute("subject_id");
         Subject_area subject_area = new Subject_area();
         subject_area.setSubject_id(subject_id);
         Page<Theme_sticker> stickers = forumService.getTheme_stickersBySubject_id(subject_area, page);
+        return stickers;
     }
 
 }

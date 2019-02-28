@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yan.dao.ForumMapper">
+    
+    <insert id="addSubjectArea" parameterType="com.yan.domain.Subject_area">
+        insert into subject_area(name, theme_num, post_num, last_post_time)
+          values (#{name}, #{theme_num}, #{post_num}, #{last_post_time})
+    </insert>
+
+    <delete id="delSubjectArea" parameterType="com.yan.domain.Subject_area">
+        delete from subject_area where subject_id = #{subject_id}
+    </delete>
+
+    <update id="updateSubjectArea" parameterType="com.yan.domain.Subject_area">
+        update subject_area set name = #{name},
+          theme_num = #{theme_num},
+          post_num = #{post_num},
+          last_post_time = #{last_post_time}
+        where subject_id = #{subject_id}
+    </update>
+    
+    <select id="selectSubjectAreaById" parameterType="com.yan.domain.Subject_area" resultType="com.yan.domain.Subject_area">
+        select * from subject_area where subject_id = #{subject_id}
+    </select>
+    
+    <select id="selectAllSubjectArea" parameterType="com.yan.domain.Subject_area" resultType="com.yan.domain.Subject_area">
+        select * from subject_area
+    </select>
+    
+    <insert id="addThemeSticker" parameterType="com.yan.domain.Theme_sticker">
+        insert into theme_sticker(subject_id, title, classification, time, uid, type, reply_num, views, status)
+          values (#{subject_id}, #{title}, #{classification}, #{time}, #{uid}, #{type}, #{reply_num}, #{views}, #{status})
+    </insert>
+    
+    <delete id="delThemeSticker" parameterType="com.yan.domain.Theme_sticker">
+        delete from theme_sticker where theme_id = #{theme_id}
+    </delete>
+
+    <update id="updateThemeSticker" parameterType="com.yan.domain.Theme_sticker">
+        update theme_sticker set subject_id = #{subject_id},
+          title = #{title},
+          classification = #{classification},
+          time = #{time},
+          last_reply_time = #{last_reply_time},
+          type = #{type},
+          reply_num = #{reply_num},
+          views = #{views},
+          status = #{status}
+    </update>
+    
+    <select id="selectThemeStickerById" parameterType="com.yan.domain.Theme_sticker" resultType="com.yan.domain.Theme_sticker">
+        select * from theme_sticker where theme_id = #{theme_id}
+    </select>
+
+    <select id="selectThemeStickerByType" resultType="com.yan.domain.Theme_sticker">
+        select * from theme_sticker where type = #{theme_sticker.type} limit #{start}, 20
+    </select>
+    
+    <select id="selectThemeStickerBySubjectArea" resultType="com.yan.domain.Theme_sticker">
+        select * from theme_sticker where subject_id = #{subject_area.subject_id} limit #{start}, 20
+    </select>
+    
+    <select id="selectThemeStickerByUser" parameterType="com.yan.domain.User" resultType="com.yan.domain.Theme_sticker">
+        select * from theme_sticker where uid = #{uid}
+    </select>
+    
+    <select id="selectThemeStickerByTitle" resultType="com.yan.domain.Theme_sticker">
+        select * from theme_sticker where title like "%"#{theme_sticker.title}"%" limit #{start}, 20
+    </select>
+    
+    <select id="selectThemeStickerByStatus" parameterType="com.yan.domain.Theme_sticker" resultType="com.yan.domain.Theme_sticker">
+        select * from theme_sticker where status = #{status}
+    </select>
+
+    <select id="countStickerBySubjectArea" parameterType="com.yan.domain.Subject_area" resultType="java.lang.Integer">
+        select count(*) from theme_sticker where subject_id = #{subject_id}
+    </select>
+    
+    <select id="countStickerByTitle" parameterType="com.yan.domain.Theme_sticker" resultType="java.lang.Integer">
+        select count(*) from theme_sticker where title like "%"#{title}"%"
+    </select>
+
+    <select id="countStickerByUser" parameterType="com.yan.domain.User" resultType="java.lang.Integer">
+        select count(*) from theme_sticker where uid = #{uid}
+    </select>
+
+    <select id="countStickerByType" parameterType="com.yan.domain.Theme_sticker" resultType="java.lang.Integer">
+        select count(*) from theme_sticker where type = #{type}
+    </select>
+
+    <insert id="addPost" parameterType="com.yan.domain.Post">
+        insert into post(theme_id, content, uid, time, type, status)
+          values (#{theme_id}, #{content}, #{uid}, #{time}, #{type}, #{status})
+    </insert>
+
+    <delete id="delPost" parameterType="com.yan.domain.Post">
+        delete from post where post_id = #{post_id}
+    </delete>
+
+    <update id="updatePost" parameterType="com.yan.domain.Post">
+        update post set content = #{content},
+          time = #{time},
+          type = #{type},
+          status = #{status}
+        where post_id = #{post_id}
+    </update>
+
+    <select id="selectPostById" parameterType="com.yan.domain.Post" resultType="com.yan.domain.Post">
+        select * from post where post_id = #{post_id}
+    </select>
+
+    <select id="selectPostByThemeSticker" parameterType="com.yan.domain.Theme_sticker" resultType="com.yan.domain.Post">
+        select * from post where theme_id = #{theme_sticker.theme_id} limit #{start}, 20
+    </select>
+    
+    <select id="selectPostByUser" parameterType="com.yan.domain.User" resultType="com.yan.domain.Post">
+        select * from post where uid = #{uid}
+    </select>
+
+    <select id="selectPostByStatus" parameterType="com.yan.domain.Post" resultType="com.yan.domain.Post">
+        select * from post where status = #{status}
+    </select>
+
+    <select id="countPostByThemeSticker" parameterType="com.yan.domain.Theme_sticker" resultType="java.lang.Integer">
+        select count(*) from post where theme_id = #{theme_id}
+    </select>
+</mapper>

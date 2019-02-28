@@ -196,7 +196,7 @@ public interface ForumMapper {
      * @param theme_sticker
      * @return
      */
-    int countPostByThemeSticker(@Param("theme_sticker") Theme_sticker theme_sticker);
+    int countPostByThemeSticker(Theme_sticker theme_sticker);
 
 
 }
