@@ -1,6 +1,7 @@
 package com.yan.service.impl;
 
 import com.yan.dao.ForumMapper;
+import com.yan.dao.UserMapper;
 import com.yan.domain.Post;
 import com.yan.domain.Subject_area;
 import com.yan.domain.Theme_sticker;
@@ -12,8 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.context.Theme;
 
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -26,6 +26,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class ForumServiceImpl implements ForumService {
     @Autowired
     private ForumMapper forumMapper;
+    @Autowired
+    private UserMapper userMapper;
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     @Override
@@ -283,18 +285,28 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public Page<Post> getPostsByTheme_sticker(Theme_sticker theme_sticker, String page) throws ForumException{
+    public Page<Map<String, Object>> getPostsByTheme_sticker(Theme_sticker theme_sticker, String page) throws ForumException{
         int total = forumMapper.countPostByThemeSticker(theme_sticker);
         int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
         if(Integer.parseInt(page) > total_page){
             throw new ForumException(ForumException.PAGE_OVER_LIMIT);
         }
         Post[] posts = forumMapper.selectPostByThemeSticker(theme_sticker, (Integer.parseInt(page) - 1) * 20);
-        Page<Post> postPage = new Page<>();
+        List<Map<String, Object>> list = new ArrayList<>();
+        for(Post p : posts){
+            Map<String, Object> map = new HashMap<>();
+            User user = new User();
+            user.setUid(p.getUid());
+            User user_in_db = userMapper.selectById(user);
+            map.put("user", user_in_db);
+            map.put("post", p);
+            list.add(map);
+        }
+        Page<Map<String, Object>> postPage = new Page<>();
         postPage.setCurrentPage(Integer.parseInt(page));
         postPage.setStartPage(1);
         postPage.setEndPage(total_page);
-        postPage.setData(Arrays.asList(posts));
+        postPage.setData(list);
         return postPage;
     }
 

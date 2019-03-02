@@ -7,6 +7,8 @@ import com.yan.domain.User;
 import com.yan.exception.ForumException;
 import com.yan.util.Page;
 
+import java.util.Map;
+
 /**
  * Package ：com.yan.service
  * Description：
@@ -160,7 +162,7 @@ public interface ForumService {
      * @param sticker
      * @return
      */
-    Page<Post> getPostsByTheme_sticker(Theme_sticker sticker, String page) throws ForumException;
+    Page<Map<String, Object>> getPostsByTheme_sticker(Theme_sticker sticker, String page) throws ForumException;
 
     /**
      * 根据用户获取主题贴

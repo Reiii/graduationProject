@@ -1,10 +1,15 @@
 package com.yan.controller;
 
+import com.yan.constant.loginRequire;
+import com.yan.domain.Post;
 import com.yan.domain.Subject_area;
 import com.yan.domain.Theme_sticker;
+import com.yan.domain.User;
 import com.yan.exception.ForumException;
 import com.yan.service.impl.ForumServiceImpl;
 import com.yan.util.Page;
+import com.yan.util.Status;
+import com.yan.util.StatusMsg;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Package ：com.yan.controller
@@ -49,6 +57,7 @@ public class ForumController {
     @RequestMapping(value = "/getAreaDetail", method = RequestMethod.GET)
     public Subject_area getAreaDetail(HttpSession session){
         String subject_id = (String)session.getAttribute("subject_id");
+        session.removeAttribute("subject_id");
         Subject_area subject_area = new Subject_area();
         subject_area.setSubject_id(subject_id);
         Subject_area area = forumService.getSubject_areaById(subject_area);
@@ -56,12 +65,53 @@ public class ForumController {
     }
 
     @RequestMapping(value = "/getStickers", method = RequestMethod.GET)
-    public Page<Theme_sticker> getStickers(HttpSession session, @RequestParam(value = "page", defaultValue = "1") String page) throws ForumException {
-        String subject_id = (String)session.getAttribute("subject_id");
+    public Page<Theme_sticker> getStickers(@RequestParam(value = "subject_id") String subject_id, @RequestParam(value = "page", defaultValue = "1") String page) throws ForumException {
         Subject_area subject_area = new Subject_area();
         subject_area.setSubject_id(subject_id);
         Page<Theme_sticker> stickers = forumService.getTheme_stickersBySubject_id(subject_area, page);
         return stickers;
+    }
+
+    @RequestMapping(value = "/getStickerDetail", method = RequestMethod.GET)
+    public ModelAndView getStickerDetail(@Param("theme_id") String theme_id, HttpSession session){
+        session.setAttribute("theme_id", theme_id);
+        return new ModelAndView("ThemeSticker");
+    }
+
+    @RequestMapping(value = "/getThemeSticker", method = RequestMethod.GET)
+    public Theme_sticker getThemeSticker(HttpSession session){
+        String theme_id = (String)session.getAttribute("theme_id");
+        Theme_sticker theme_sticker = new Theme_sticker();
+        theme_sticker.setTheme_id(theme_id);
+        Theme_sticker sticker_in_db = forumService.getTheme_stickerById(theme_sticker);
+        return sticker_in_db;
+    }
+
+    @RequestMapping(value = "/getPosts", method = RequestMethod.GET)
+    public Page<Map<String, Object>> getPosts(@Param("theme_id") String theme_id, @RequestParam(value = "page", defaultValue = "1") String page) throws ForumException{
+        Theme_sticker sticker = new Theme_sticker();
+        sticker.setTheme_id(theme_id);
+        Page<Map<String, Object>> PostPage = forumService.getPostsByTheme_sticker(sticker, page);
+        return PostPage;
+    }
+
+    @loginRequire
+    @RequestMapping(value = "/addPost", method = RequestMethod.POST)
+    public Status addPost(HttpSession session, @Param("theme_id") String theme_id, @Param("content") String content){
+        Status status = new Status();
+        User user = (User)session.getAttribute("user");
+        Post post = new Post();
+        post.setTheme_id(theme_id);
+        post.setContent(content);
+        post.setTime(String.valueOf(new Date().getTime()));
+        post.setType("0");
+        post.setStatus("0");
+        if(forumService.addPost(post, user)){
+            status.setStatus(StatusMsg.ADD_SUCCESS);
+        }else{
+            status.setStatus(StatusMsg.ADD_FAILED);
+        }
+        return status;
     }
 
 }

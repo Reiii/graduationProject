@@ -103,9 +103,9 @@ public class ActivityController {
         activity.setParticipants_num("0");
         activity.setStatus("0");
         if(activityService.addCity_activity(activity, user)){
-            status.setStatus(StatusMsg.ADD_TOY_SUCCESS);
+            status.setStatus(StatusMsg.ADD_SUCCESS);
         }else{
-            status.setStatus(StatusMsg.ADD_TOY_FAILED);
+            status.setStatus(StatusMsg.ADD_FAILED);
         }
         return status;
     }

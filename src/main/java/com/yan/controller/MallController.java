@@ -211,9 +211,9 @@ public class MallController {
         toy.setDescription(description);
         toy.setStatus("0");
         if(mallService.addToy(toy)){
-            status.setStatus(StatusMsg.ADD_TOY_SUCCESS);
+            status.setStatus(StatusMsg.ADD_SUCCESS);
         }else{
-            status.setStatus(StatusMsg.ADD_TOY_FAILED);
+            status.setStatus(StatusMsg.ADD_FAILED);
         }
         return status;
     }
