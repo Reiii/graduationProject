@@ -48,6 +48,7 @@
           reply_num = #{reply_num},
           views = #{views},
           status = #{status}
+        where theme_id = #{theme_id}
     </update>
     
     <select id="selectThemeStickerById" parameterType="com.yan.domain.Theme_sticker" resultType="com.yan.domain.Theme_sticker">

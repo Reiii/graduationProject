@@ -92,7 +92,7 @@ public interface ForumService {
      * @param page
      * @return
      */
-    Page<Theme_sticker> getTheme_stickersBySubject_id(Subject_area subject_area, String page) throws ForumException;
+    Page<Map<String, Object>> getTheme_stickersBySubject_id(Subject_area subject_area, String page) throws ForumException;
 
     /**
      * 根据标题获取主题贴

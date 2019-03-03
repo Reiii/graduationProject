@@ -51,7 +51,7 @@ public class ForumController {
     @RequestMapping(value = "/getSubjectArea", method = RequestMethod.GET)
     public ModelAndView getSubjectArea(@Param("subject_id") String subject_id, HttpSession session){
         session.setAttribute("subject_id", subject_id);
-        return new ModelAndView("subjectArea");
+        return new ModelAndView("SubjectArea");
     }
 
     @RequestMapping(value = "/getAreaDetail", method = RequestMethod.GET)
@@ -65,10 +65,10 @@ public class ForumController {
     }
 
     @RequestMapping(value = "/getStickers", method = RequestMethod.GET)
-    public Page<Theme_sticker> getStickers(@RequestParam(value = "subject_id") String subject_id, @RequestParam(value = "page", defaultValue = "1") String page) throws ForumException {
+    public Page<Map<String, Object>> getStickers(@RequestParam(value = "subject_id") String subject_id, @RequestParam(value = "page", defaultValue = "1") String page) throws ForumException {
         Subject_area subject_area = new Subject_area();
         subject_area.setSubject_id(subject_id);
-        Page<Theme_sticker> stickers = forumService.getTheme_stickersBySubject_id(subject_area, page);
+        Page<Map<String, Object>> stickers = forumService.getTheme_stickersBySubject_id(subject_area, page);
         return stickers;
     }
 

@@ -35,7 +35,8 @@
 			<el-col :span="20">
 				<el-container>
 					<el-header>
-						帖子详情
+						主题贴:{{ theme_sticker.title }}<br>
+						时间:{{ new Date(parseInt(theme_sticker.time)).pattern("yyyy-MM-dd hh:mm:ss") }}
 					</el-header>
 					<el-main>
 						<div class="post_list">
@@ -44,8 +45,8 @@
 									<tr>
 										<td class="userinfo">
 											<div class=info>
-												用户:{{ p.user.username }}
-												注册时间:{{ new Date(parseInt(p.user.reg_time)).pattern("yyyy-MM-dd hh:mm:ss") }}
+												用户:{{ p.user.username }}<br>
+												注册时间:{{ new Date(parseInt(p.user.reg_time)).pattern("yyyy-MM-dd hh:mm:ss") }}<br>
 												积分:{{ p.user.integral }}
 											</div>
 										</td>
@@ -130,6 +131,7 @@
 		},
 		methods: {
 			handleSubmit(){
+			    var win = this;
 				axios({
 					url: 'http://localhost:8080/forum/addPost',
                     method: "post",
@@ -158,11 +160,14 @@
                                 location.reload();
                         	});
                        	}else{
-							win.$alert(response.data.status, '错误', {
-								confirmButtonText: '确定'
-							});
-                        	}
-						})
+                            if(response.data.status != null){
+                                win.$alert(response.data.status, '错误', {
+                                    confirmButtonText: '确定'
+                                });
+							}
+
+						}
+					})
 				.catch(function (error) {
                             console.log('submit error');
                             win.$alert('网络连接丢失', '错误', {
@@ -173,10 +178,12 @@
 			handlePage(page){
 				var win = this;
                 axios.get("http://localhost:8080/forum/getPosts",{
-                    theme_id: this.theme_sticker.theme_id,
-                    page: page
+                    params:{
+                        theme_id: this.theme_sticker.theme_id,
+                        page: page
+					}
                 }).then((response) => {
-                    this.items = response.data.data;
+                    this.posts = response.data.data;
                 this.currentPage = response.data.currentPage;
                 this.endPage = response.data.endPage;
             }).catch(function(error){

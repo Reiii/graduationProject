@@ -73,7 +73,7 @@
 		},
 		methods: {
 			handleDetail(subject_id){
-				window.open("http://localhost:8080/forum/getSubjectArea?subject_id" + subject_id, "_blank");
+				window.open("http://localhost:8080/forum/getSubjectArea?subject_id=" + subject_id, "_blank");
 			}
 		},
 		mounted(){
