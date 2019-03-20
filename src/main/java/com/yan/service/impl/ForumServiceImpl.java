@@ -174,18 +174,54 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public Page<Theme_sticker> getTheme_stickerByTitle(Theme_sticker theme_sticker, String page) throws ForumException {
+    public Page<Map<String, Object>> getTheme_stickerByClassification(Theme_sticker theme_sticker, String page) throws ForumException {
+        int total = forumMapper.countStickerByClassification(theme_sticker);
+        int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
+        if(Integer.parseInt(page) > total_page){
+            throw new ForumException(ForumException.PAGE_OVER_LIMIT);
+        }
+        Theme_sticker[] stickers = forumMapper.selectThemeStickerByClassification(theme_sticker, (Integer.parseInt(page) - 1) * 20);
+        Page<Map<String, Object>> stickerPage = new Page<>();
+        stickerPage.setCurrentPage(Integer.parseInt(page));
+        stickerPage.setStartPage(1);
+        stickerPage.setEndPage(total_page);
+        List<Map<String, Object>> list = new ArrayList<>();
+        for(Theme_sticker ts : stickers){
+            User user = new User();
+            user.setUid(ts.getUid());
+            User user_in_db = userMapper.selectById(user);
+            Map<String, Object> map = new HashMap<>();
+            map.put("user", user_in_db);
+            map.put("theme_sticker", ts);
+            list.add(map);
+        }
+        stickerPage.setData(list);
+        return stickerPage;
+    }
+
+    @Override
+    public Page<Map<String, Object>> getTheme_stickerByTitle(Theme_sticker theme_sticker, String page) throws ForumException {
         int total = forumMapper.countStickerByTitle(theme_sticker);
         int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
         if(Integer.parseInt(page) > total_page){
             throw new ForumException(ForumException.PAGE_OVER_LIMIT);
         }
         Theme_sticker[] stickers = forumMapper.selectThemeStickerByTitle(theme_sticker, (Integer.parseInt(page) - 1) * 20);
-        Page<Theme_sticker> stickerPage = new Page<>();
+        Page<Map<String, Object>> stickerPage = new Page<>();
         stickerPage.setCurrentPage(Integer.parseInt(page));
         stickerPage.setStartPage(1);
         stickerPage.setEndPage(total_page);
-        stickerPage.setData(Arrays.asList(stickers));
+        List<Map<String, Object>> list = new ArrayList<>();
+        for(Theme_sticker ts : stickers){
+            User user = new User();
+            user.setUid(ts.getUid());
+            User user_in_db = userMapper.selectById(user);
+            Map<String, Object> map = new HashMap<>();
+            map.put("user", user_in_db);
+            map.put("theme_sticker", ts);
+            list.add(map);
+        }
+        stickerPage.setData(list);
         return stickerPage;
     }
 

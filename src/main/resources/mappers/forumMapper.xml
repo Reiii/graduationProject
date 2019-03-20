@@ -54,6 +54,10 @@
     <select id="selectThemeStickerById" parameterType="com.yan.domain.Theme_sticker" resultType="com.yan.domain.Theme_sticker">
         select * from theme_sticker where theme_id = #{theme_id}
     </select>
+    
+    <select id="selectThemeStickerByClassification" resultType="com.yan.domain.Theme_sticker">
+        select * from theme_sticker where subject_id = #{theme_sticker.subject_id} and classification = #{theme_sticker.classification} limit #{start}, 20
+    </select>
 
     <select id="selectThemeStickerByType" resultType="com.yan.domain.Theme_sticker">
         select * from theme_sticker where type = #{theme_sticker.type} limit #{start}, 20
@@ -126,5 +130,9 @@
 
     <select id="countPostByThemeSticker" parameterType="com.yan.domain.Theme_sticker" resultType="java.lang.Integer">
         select count(*) from post where theme_id = #{theme_id}
+    </select>
+
+    <select id="countStickerByClassification" parameterType="com.yan.domain.Theme_sticker" resultType="java.lang.Integer">
+        select count(*) from theme_sticker where subject_id = #{subject_id} and classification = #{classification}
     </select>
 </mapper>

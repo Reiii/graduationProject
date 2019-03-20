@@ -248,4 +248,11 @@ public interface MallMapper {
      * @return
      */
     User selectUserByToy(Toy toy);
+
+    /**
+     * 添加玩具图片
+     * @param pic
+     * @return
+     */
+    int addPic(Picture pic);
 }

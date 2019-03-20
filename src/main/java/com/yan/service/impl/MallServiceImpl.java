@@ -1,13 +1,18 @@
 package com.yan.service.impl;
 
 import com.yan.dao.MallMapper;
+import com.yan.dao.UserMapper;
 import com.yan.domain.*;
 import com.yan.exception.MallException;
 import com.yan.service.MallService;
 import com.yan.util.Page;
+import com.yan.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -22,9 +27,19 @@ public class MallServiceImpl implements MallService{
     @Autowired
     private MallMapper mallMapper;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
-    public boolean addToy(Toy toy) {
+    public boolean addToy(Toy toy, String[] pic) {
         mallMapper.addToy(toy);
+        for (int i = 0; i < pic.length; i++) {
+            Picture picture = new Picture();
+            picture.setCommodity_id(toy.getCommodity_id());
+            picture.setNumber(String.valueOf(i + 1));
+            picture.setUrl("http://104.248.178.168/images/" + pic[i]);
+            mallMapper.addPic(picture);
+        }
         return true;
     }
 
@@ -57,28 +72,52 @@ public class MallServiceImpl implements MallService{
         if(Integer.parseInt(page) > total_page){
             throw new MallException(MallException.PAGE_OVER_LIMIT);
         }
+        Page<Map<String, Object>> toyPage = new Page<>();
+        List<Map<String, Object>> list = new ArrayList<>();
         Toy[] toys = mallMapper.selectAllToy((Integer.parseInt(page) - 1) * 20);
-        Page<Toy> toyPage = new Page<>();
+        for(Toy toy : toys){
+            User user = new User();
+            user.setUid(toy.getUid());
+            User user_in_db = userMapper.selectById(user);
+            Picture pic = mallMapper.selectPictureByCommodity_id(toy);
+            Map<String, Object> map = new HashMap<>();
+            map.put("toy", toy);
+            map.put("user", user_in_db);
+            map.put("pic", pic);
+            list.add(map);
+        }
         toyPage.setCurrentPage(Integer.parseInt(page));
         toyPage.setStartPage(1);
         toyPage.setEndPage(total_page);
-        toyPage.setData(Arrays.asList(toys));
+        toyPage.setData(list);
         return toyPage;
     }
 
     @Override
-    public Page<Toy> getToysByKeyword(String keyword, String page) throws MallException{
+    public Page getToysByKeyword(String keyword, String page) throws MallException{
         int total = mallMapper.countToyByKeyword(keyword);
         int total_page = total / 20 * 20 == total ? total / 20 : total / 20 + 1;
         if(Integer.parseInt(page) > total_page && total_page != 0){
             throw new MallException(MallException.PAGE_OVER_LIMIT);
         }
+        Page<Map<String, Object>> toyPage = new Page<>();
+        List<Map<String, Object>> list = new ArrayList<>();
         Toy[] toys = mallMapper.selectToyByTitle_page(keyword, (Integer.parseInt(page) - 1) * 20);
-        Page<Toy> toyPage = new Page<>();
+        for(Toy toy : toys){
+            User user = new User();
+            user.setUid(toy.getUid());
+            User user_in_db = userMapper.selectById(user);
+            Picture pic = mallMapper.selectPictureByCommodity_id(toy);
+            Map<String, Object> map = new HashMap<>();
+            map.put("toy", toy);
+            map.put("user", user_in_db);
+            map.put("pic", pic);
+            list.add(map);
+        }
         toyPage.setCurrentPage(Integer.parseInt(page));
         toyPage.setStartPage(1);
         toyPage.setEndPage(total_page);
-        toyPage.setData(Arrays.asList(toys));
+        toyPage.setData(list);
         return toyPage;
     }
 
@@ -327,5 +366,16 @@ public class MallServiceImpl implements MallService{
             }
         }
         return false;
+    }
+
+    @Override
+    public String UploadPic(MultipartFile file) throws IOException {
+        String filename = String.valueOf(new Date().getTime()) + String.valueOf(new Random().nextInt(1000)) + ".jpg";
+        InputStream input = file.getInputStream();
+        if(Utils.uploadFile(filename, input)){
+            return filename;
+        }else{
+            return null;
+        }
     }
 }

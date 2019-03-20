@@ -79,6 +79,14 @@ public interface ForumMapper {
     Theme_sticker selectThemeStickerById(Theme_sticker theme_sticker);
 
     /**
+     * 根据分类选择主题贴
+     * @param theme_sticker
+     * @param page
+     * @return
+     */
+    Theme_sticker[] selectThemeStickerByClassification(@Param("theme_sticker") Theme_sticker theme_sticker, @Param("start") int start);
+
+    /**
      * 根据类型选择主题贴
      * @param theme_sticker
      * @return
@@ -134,6 +142,13 @@ public interface ForumMapper {
      * @return
      */
     int countStickerByUser(User user);
+
+    /**
+     * 根据分类获取主题贴数量
+     * @param theme_sticker
+     * @return
+     */
+    int countStickerByClassification(Theme_sticker theme_sticker);
 
     /**
      * 根据类型获取主题贴数量

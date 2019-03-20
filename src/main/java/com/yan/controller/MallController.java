@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -198,7 +200,7 @@ public class MallController {
 
     @loginRequire
     @RequestMapping(value = "/doRelease", method = RequestMethod.POST)
-    public Status doRelease(HttpSession session, @Param("title") String title, @Param("province") String province, @Param("city") String city, @Param("price") String price, @Param("means_of_transction") String means_of_transction, @Param("description") String description){
+    public Status doRelease(HttpSession session, @Param("title") String title, @Param("province") String province, @Param("city") String city, @Param("price") String price, @Param("means_of_transction") String means_of_transction, @Param("description") String description, @Param("pic") String[] pic){
         Status status = new Status();
         User user = (User)session.getAttribute("user");
         Toy toy = new Toy();
@@ -210,7 +212,7 @@ public class MallController {
         toy.setMeans_of_transction(means_of_transction);
         toy.setDescription(description);
         toy.setStatus("0");
-        if(mallService.addToy(toy)){
+        if(mallService.addToy(toy, pic)){
             status.setStatus(StatusMsg.ADD_SUCCESS);
         }else{
             status.setStatus(StatusMsg.ADD_FAILED);
@@ -260,6 +262,18 @@ public class MallController {
             status.setStatus(StatusMsg.DEL_SUCCESS);
         }else{
             status.setStatus(StatusMsg.DEL_FAILED);
+        }
+        return status;
+    }
+
+    @RequestMapping(value = "/uploadPic", method = RequestMethod.POST)
+    public Status uploadPic(@RequestParam(value = "pic") MultipartFile multipartFile) throws IOException {
+        Status status = new Status();
+        String filename = mallService.UploadPic(multipartFile);
+        if(filename != null){
+            status.setStatus(filename);
+        }else{
+            status.setStatus("error");
         }
         return status;
     }

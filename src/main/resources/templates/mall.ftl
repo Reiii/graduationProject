@@ -39,7 +39,7 @@
         <el-menu-item index="4"><a href="http://localhost:8080/user/userinfo">个人中心</a></el-menu-item>
     </el-menu>
     <br>
-    <el-container v-if="items != []">
+    <el-container>
         <el-header>
             <el-row type="flex" justify="center">
                 <el-col :span="12">
@@ -65,12 +65,12 @@
             <br>
             <div class="item-list">
                 <span v-for="i in items">
-                    <a class="item" @click="handleHrefClick(i.commodity_id)">
-                        <div class="item-img">
-                            <img v-bind:id="i.commodity_id" :src="getCover(i.commodity_id)">
+                    <a class="item" @click="handleHrefClick(i.toy.commodity_id)">
+                        <div class="item-img" v-if="i.pic">
+                            <img :src="i.pic.url">
                         </div>
-                        <div class="item-title">{{ i.title }}</div>
-                        <div class="item-price"><font color="red" size="4">¥ {{ i.price }}</font></div>
+                        <div class="item-title">{{ i.toy.title }}</div>
+                        <div class="item-price"><font color="red" size="4">¥ {{ i.toy.price }}</font></div>
                 </a>
                 </span>
             </div>
@@ -150,6 +150,7 @@
                     params: param
                 }).then((response) => {
                     this.items = response.data.data;
+                    console.log(this.items);
                 this.currentPage = response.data.currentPage;
                 this.endPage = response.data.endPage;
             }).catch(function(error){
@@ -164,20 +165,6 @@
 			},
 			handleHrefClick(id){
                 window.open("http://localhost:8080/mall/item?commodity_id=" + id, "_blank");
-            },
-            getCover(commodity_id){
-                    axios.get("http://localhost:8080/mall/cover",{
-                        params:{
-                            commodity_id: commodity_id
-                        }
-                    }).then((response) => {
-                        //return response.data.url;
-                    document.getElementById(commodity_id).src=response.data.url;
-                })
-                .catch(function(error){
-                        console.log("error in loading cover.")
-                    });
-
             }
         }
     })

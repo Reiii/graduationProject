@@ -110,5 +110,20 @@ public class ActivityController {
         return status;
     }
 
+    @loginRequire
+    @RequestMapping(value = "/delActivity", method = RequestMethod.POST)
+    public Status delActivity(@Param("activity_id") String activity_id, HttpSession session){
+        Status status = new Status();
+        City_activity city_activity = new City_activity();
+        city_activity.setActivity_id(activity_id);
+        User user = (User)session.getAttribute("user");
+        if(activityService.delCity_activity(city_activity, user)){
+            status.setStatus(StatusMsg.DEL_SUCCESS);
+        }else{
+            status.setStatus(StatusMsg.DEL_FAILED);
+        }
+        return status;
+    }
+
 
 }

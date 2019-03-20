@@ -95,12 +95,22 @@ public interface ForumService {
     Page<Map<String, Object>> getTheme_stickersBySubject_id(Subject_area subject_area, String page) throws ForumException;
 
     /**
+     * 根据分类获取主题贴
+     * @param theme_sticker
+     * @param page
+     * @return
+     * @throws ForumException
+     */
+    Page<Map<String, Object>> getTheme_stickerByClassification(Theme_sticker theme_sticker, String page) throws ForumException;
+
+
+    /**
      * 根据标题获取主题贴
      * @param theme_sticker
      * @param page
      * @return
      */
-    Page<Theme_sticker> getTheme_stickerByTitle(Theme_sticker theme_sticker, String page) throws ForumException;
+    Page<Map<String, Object>> getTheme_stickerByTitle(Theme_sticker theme_sticker, String page) throws ForumException;
 
     /**
      * 根据用户获取主题贴

@@ -3,7 +3,9 @@ package com.yan.service;
 import com.yan.domain.*;
 import com.yan.exception.MallException;
 import com.yan.util.Page;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -21,7 +23,7 @@ public interface MallService {
      * @param user
      * @return
      */
-    boolean addToy(Toy toy);
+    boolean addToy(Toy toy, String[] pic);
 
     /**
      * 更新玩具信息
@@ -206,5 +208,7 @@ public interface MallService {
      * @return
      */
     boolean confirmOrder(Order order, User user);
+
+    String UploadPic(MultipartFile file) throws IOException;
 
 }

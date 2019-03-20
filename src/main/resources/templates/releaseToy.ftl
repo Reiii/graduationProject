@@ -44,13 +44,15 @@
 					<el-form-item label="玩具图片">
 						<el-upload
 							class="upload-demo"
-							action=""
+							name="pic"
+							action="/mall/uploadPic"
 							:on-preview="handlePreview"
+							:on-success="addPic"
 							:on-remove="handleRemove"
 							:file-list="fileList"
 							list-type="picture">
 							<el-button size="small" type="primary">点击上传</el-button>
-							<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+							<div slot="tip" class="el-upload__tip">只能上传jpg文件，且不超过500kb</div>
 						</el-upload>
 					</el-form-item>
 					<el-form-item label="玩具详情">
@@ -95,7 +97,8 @@
 					means_of_transction: '',
 					province: '',
 					city: '',
-					description: ''
+					description: '',
+					pic: []
 				},
 				releaseFormRules: {
 					title: [
@@ -171,7 +174,8 @@
                                 province: this.releaseForm.province,
                                 city: this.releaseForm.city,
                                 means_of_transction: this.releaseForm.means_of_transction,
-                                description: this.releaseForm.description
+                                description: this.releaseForm.description,
+								pic: this.releaseForm.pic
                             },
                             transformRequest: [
                                 function (data) {
@@ -213,7 +217,10 @@
       		},
             handlePreview(file) {
         		console.log(file);
-      		}
+      		},
+			addPic(response, file, fileList){
+			    this.releaseForm.pic.push(response.status)
+			}
 		}
 	})
 </script>

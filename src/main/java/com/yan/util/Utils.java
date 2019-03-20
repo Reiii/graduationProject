@@ -2,7 +2,14 @@ package com.yan.util;
 
 import com.sun.mail.util.MailSSLSocketFactory;
 import com.yan.domain.User;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPReply;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -153,5 +160,40 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static boolean uploadFile(String filename, InputStream input){
+        FTPClient ftp = new FTPClient();
+        try{
+            ftp.connect("104.248.178.168");
+            ftp.login("ftpuser", "123456");
+            int reply = ftp.getReplyCode();
+            if(!FTPReply.isPositiveCompletion(reply)){
+                ftp.disconnect();
+                return false;
+            }
+            ftp.changeWorkingDirectory("/www/images");
+            for (FTPFile f: ftp.listFiles()) {
+                System.out.println(f.getName());
+            }
+            ftp.enterLocalPassiveMode();
+            ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
+            if(!ftp.storeFile(filename, input)){
+                return false;
+            }
+            input.close();
+            ftp.logout();
+        }catch (IOException ex){
+            ex.printStackTrace();
+        }finally {
+            if(ftp.isConnected()){
+                try{
+                    ftp.disconnect();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return true;
     }
 }

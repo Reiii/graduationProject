@@ -146,25 +146,28 @@
                             <el-table-column
                                     prop="start_time"
                                     label="开始时间"
+                                    :formatter="dateFormat"
                                     width="180">
                             </el-table-column>
                             <el-table-column
                                     prop="end_time"
                                     label="结束时间"
+                                    :formatter="dateFormat"
                                     width=180>
                             </el-table-column>
                             <el-table-column
                                     prop="time"
                                     label="创建时间"
+                                    :formatter="dateFormat"
                                     width="180">
                             </el-table-column>
                             <el-table-column
                                     label="操作"
                                     width="200">
                                 <template slot-scope="scope">
-                                    <el-button v-if="scope.row.status!='3'" type="text" @click="viewToy(scope.row)">查看</el-button>
-                                    <el-button v-if="scope.row.status='0'" type="text" @click="editToy(scope.row)">编辑</el-button>
-                                    <el-button v-if="scope.row.status='0'" type="text" @click.native.prevent="delToy(scope.row, scope.$index, myToys)">删除</el-button>
+                                    <el-button v-if="scope.row.status!='3'" type="text" @click="viewActivity(scope.row)">查看</el-button>
+                                    <el-button v-if="scope.row.status='0'" type="text" @click="editActivity(scope.row)">编辑</el-button>
+                                    <el-button v-if="scope.row.status='0'" type="text" @click.native.prevent="delActivity(scope.row, scope.$index, myToys)">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -368,7 +371,54 @@
                         confirmButtonText: '确定'
                     });
                 });
-			}
+			},
+            dateFormat(row, column){
+                var date = row[column.property];
+                if (date == undefined) {
+                    return "";
+                }
+                return new Date(parseInt(date)).pattern("yyyy-MM-dd hh:mm:ss");
+            },
+            viewActivity(row){
+                window.open("http://localhost:8080/activity/getActivity?activity_id=" + row.activity_id);
+            },
+            editActivity(row){
+
+            },
+            delActivity(row, index, data){
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:8080/activity/delActivity',
+                    data: {
+                        activity_id: row.activity_id
+                    },
+                    transformRequest: [
+                        function (data) {
+                            // Do whatever you want to transform the data
+                            let ret = ''
+                            for (let it in data) {
+                                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                            }
+                            return ret
+                        }
+                    ],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then((response) => {
+                    if(response.data.status == '删除成功'){
+                    data.splice(index, 1);
+                }
+                this.$alert(response.data.status, '提示', {
+                    confirmButtonText: '确定'
+                });
+            }).catch(function(error) {
+                    console.log("lost connection.")
+                    this.$alert('网络连接丢失', '错误', {
+                        confirmButtonText: '确定'
+                    });
+                });
+            }
 		}
 	})
 </script>

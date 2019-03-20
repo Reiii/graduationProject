@@ -114,4 +114,26 @@ public class ForumController {
         return status;
     }
 
+    @RequestMapping(value = "/getStickersByClass", method = RequestMethod.GET)
+    public Page<Map<String, Object>> getStickerByClass(@Param("subject_id") String subject_id, @Param("classification") String classification, @RequestParam(value = "page", defaultValue = "1") String page) throws ForumException{
+        Theme_sticker theme_sticker = new Theme_sticker();
+        theme_sticker.setSubject_id(subject_id);
+        theme_sticker.setClassification(classification);
+        Page<Map<String, Object>> stickerPage = forumService.getTheme_stickerByClassification(theme_sticker, page);
+        return stickerPage;
+    }
+
+    @RequestMapping(value = "/getStickersByTitle", method = RequestMethod.GET)
+    public Page<Map<String, Object>> getStickerByTitle(@Param("title") String title, @RequestParam(value = "page", defaultValue = "1") String page) throws ForumException{
+        Theme_sticker theme_sticker = new Theme_sticker();
+        theme_sticker.setTitle(title);
+        Page<Map<String, Object>> stickerPage = forumService.getTheme_stickerByTitle(theme_sticker, page);
+        return stickerPage;
+    }
+
+    @RequestMapping(value = "/addThemeSticker", method = RequestMethod.GET)
+    public Page<Map<String, Object>> addSticker(@Param("title") String title, @Param("classification") String classification){
+        return null;
+    }
+
 }

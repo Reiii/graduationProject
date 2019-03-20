@@ -47,7 +47,14 @@
 			<el-col :span="20">
 				<el-container>
 					<el-header>
-						主题区头部
+						{{ subject_area.title }}<br>
+                        <el-row type="flex" justify="center">
+                            <el-col :span="12">
+                                <el-input placeholder="请输入关键字.." v-model="keyword">
+                                    <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+                                </el-input>
+                            </el-col>
+                        </el-row>
 					</el-header>
 					<el-main>
 						<div class="sticker_list">
@@ -92,11 +99,17 @@
 			subject_area: '',
 			stickers: '',
 			currentPage: '',
-			endPage: ''
+			endPage: '',
+			keyword: ''
 		},
 		methods: {
-			handleClassification(){
-
+			handleClassification(classification){
+				axios.get("http://localhost:8080/forum/getStickersByClass",{
+				    params: {
+				        subject_id: this.subject_area.subject_id,
+                        classification: classification
+					}
+				})
 			},
 			handleSticker(theme_id){
 				window.open("http://localhost:8080/forum/getStickerDetail?theme_id=" + theme_id, "blank");
@@ -121,6 +134,23 @@
 			},
 			handleCurrentChange(val){
                 this.handlePage(val);
+			},
+			handleSearch(){
+			    var win = this
+				axios.get("http://localhost:8080/forum/getStickersByTitle", {
+				    params:{
+						title: this.keyword
+					}
+				}).then((response) => {
+                    this.stickers = response.data.data;
+                this.currentPage = response.data.currentPage;
+                this.endPage = response.data.endPage;
+            }).catch(function(error){
+                    console.log("lost connection.")
+                    win.$alert('网络连接丢失', '错误', {
+                        confirmButtonText: '确定'
+                    });
+                });
 			}
 
 		},

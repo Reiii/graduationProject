@@ -60,7 +60,7 @@
     </select>
     
     <select id="selectActivityByUser" resultType="com.yan.domain.City_activity">
-         select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where uid = #{uid}
+         select activity_id, title, start_time, end_time, time, province, city, address, cost from city_activity where uid = #{uid}
     </select>
 
     <select id="countAllActivity" resultType="java.lang.Integer">

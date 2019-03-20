@@ -51,7 +51,7 @@
          where commodity_id = #{commodity_id}
     </update>
     
-    <insert id="addToy" parameterType="com.yan.domain.Toy">
+    <insert id="addToy" useGeneratedKeys="true" keyProperty="commodity_id" parameterType="com.yan.domain.Toy">
         insert into toy (uid, title, description, means_of_transction, province, city, status, price)
           values (#{uid}, #{title}, #{description}, #{means_of_transction}, #{province}, #{city}, #{status}, #{price})
     </insert>
@@ -82,5 +82,9 @@
         status = #{status},
         means_of_transction = #{means_of_transction}
     </update>
+
+    <insert id="addPic" parameterType="com.yan.domain.Picture">
+        insert into picture(commodity_id, url, number) values (#{commodity_id}, #{url}, #{number})
+    </insert>
 
 </mapper>
