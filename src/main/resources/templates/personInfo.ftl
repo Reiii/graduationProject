@@ -172,7 +172,45 @@
                             </el-table-column>
                         </el-table>
                     </el-tab-pane>
-				    <el-tab-pane label="我的帖子">我的帖子</el-tab-pane>
+				    <el-tab-pane label="我的帖子">
+                        <el-table :data="myStickers" stripe>
+                            <el-table-column
+                                    prop="title"
+                                    label="标题"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="classification"
+                                    label="分类"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="time"
+                                    label="发布时间"
+                                    :formatter="dateFormat"
+                                    width=180>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="last_reply_time"
+                                    label="最后回复时间"
+                                    :formatter="dateFormat"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="reply_num"
+                                    label="回复"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    label="操作"
+                                    width="200">
+                                <template slot-scope="scope">
+                                    <el-button v-if="scope.row.status!='3'" type="text" @click="viewSticker(scope.row)">查看</el-button>
+                                    <el-button v-if="scope.row.status='0'" type="text" @click.native.prevent="delSticker(scope.row, scope.$index, myToys)">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-tab-pane>
 				 </el-tabs>
 			</el-main>
 		</el-container>
@@ -188,15 +226,16 @@
 				position: "left",
 				activeIndex: "4",
 				personalForm: {
-					email: "123@qq.com",
-					username: "yan",
-					integral: "0",
-					credit: "0",
-					reg_time: "1993-4-3"
+					email: "",
+					username: "",
+					integral: "",
+					credit: "",
+					reg_time: ""
 				},
-				myOrders: "",
+				myOrders: '',
 				myToys: '',
-                myActivity: ''
+                myActivity: '',
+                myStickers: ''
 			}
 		},
         mounted(){
@@ -238,6 +277,15 @@
                     .then((response) => {
                         this.myActivity = response.data;
             }).catch(function(error){
+                console.log("lost connection.")
+                this.$alert('网络连接丢失', '错误', {
+                    confirmButtonText: '确定'
+                });
+            })
+            axios.get("http://localhost:8080/forum/myStickers")
+                    .then((response) => {
+                this.myStickers = response.data;
+        }).catch(function(error){
                 console.log("lost connection.")
                 this.$alert('网络连接丢失', '错误', {
                     confirmButtonText: '确定'
@@ -391,6 +439,43 @@
                     url: 'http://localhost:8080/activity/delActivity',
                     data: {
                         activity_id: row.activity_id
+                    },
+                    transformRequest: [
+                        function (data) {
+                            // Do whatever you want to transform the data
+                            let ret = ''
+                            for (let it in data) {
+                                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                            }
+                            return ret
+                        }
+                    ],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then((response) => {
+                    if(response.data.status == '删除成功'){
+                    data.splice(index, 1);
+                }
+                this.$alert(response.data.status, '提示', {
+                    confirmButtonText: '确定'
+                });
+            }).catch(function(error) {
+                    console.log("lost connection.")
+                    this.$alert('网络连接丢失', '错误', {
+                        confirmButtonText: '确定'
+                    });
+                });
+            },
+            viewSticker(row){
+                window.open("http://localhost:8080/forum/getStickerDetail?theme_id=" + row.theme_id);
+            },
+            delSticker(row, index, data){
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:8080/forum/delSticker',
+                    data: {
+                        theme_id: row.theme_id
                     },
                     transformRequest: [
                         function (data) {

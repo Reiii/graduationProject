@@ -6,9 +6,12 @@ import com.yan.domain.User;
 import com.yan.exception.ActivityException;
 import com.yan.service.ActivityService;
 import com.yan.util.Page;
+import com.yan.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -205,5 +208,14 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public User[] getUsersByCity_activity(City_activity city_activity) {
         return activityMapper.selectUserByActivity(city_activity);
+    }
+
+    @Override
+    public String UploadCover(MultipartFile file) throws IOException {
+        String name = "avtivity" + new Date().getTime() + ".jpg";
+        if(Utils.uploadFile(name, file.getInputStream())){
+            return name;
+        }
+        return null;
     }
 }

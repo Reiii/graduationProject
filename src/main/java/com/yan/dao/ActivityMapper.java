@@ -4,6 +4,9 @@ import com.yan.domain.City_activity;
 import com.yan.domain.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * Package ：com.yan.dao
@@ -162,5 +165,6 @@ public interface ActivityMapper {
      * @return
      */
     User[] selectUserByActivity(City_activity city_activity);
+
 
 }

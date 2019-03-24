@@ -43,7 +43,7 @@
 					<el-main>
 						<div class="item">
 								<div class="pic">
-									<img src="https://img3.doubanio.com/pview/event_poster/median/public/c7fe228a53a8be2.jpg">
+									<img :src="activity.cover">
 								</div>
 								<div class="info">
 									<ul>

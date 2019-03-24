@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -124,6 +126,21 @@ public class ActivityController {
         }
         return status;
     }
+
+    @loginRequire
+    @RequestMapping(value = "/uploadCover", method = RequestMethod.POST)
+    public Status uploadPic(@RequestParam(value = "pic") MultipartFile multipartFile) throws IOException {
+        Status status = new Status();
+        String filename = activityService.UploadCover(multipartFile);
+        if(filename != null){
+            status.setStatus(filename);
+        }else{
+            status.setStatus("error");
+        }
+        return status;
+    }
+
+
 
 
 }

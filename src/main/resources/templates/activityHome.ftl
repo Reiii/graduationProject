@@ -63,8 +63,8 @@
 				<div id="activity_list">
 					
 							<div class="item" v-for=" i in items">
-								<div class="pic">
-									<img src="https://img3.doubanio.com/pview/event_poster/median/public/c7fe228a53a8be2.jpg">
+								<div class="pic" >
+									<img :src="i.cover">
 								</div>
 								<div class="info">
                                     <ul>

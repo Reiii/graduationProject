@@ -131,9 +131,29 @@ public class ForumController {
         return stickerPage;
     }
 
+    @loginRequire
     @RequestMapping(value = "/addThemeSticker", method = RequestMethod.GET)
-    public Page<Map<String, Object>> addSticker(@Param("title") String title, @Param("classification") String classification){
-        return null;
+    public Status addSticker(@Param("title") String title, @Param("classification") String classification, HttpSession session){
+        Status status = new Status();
+        User user = (User)session.getAttribute("user");
+        Theme_sticker theme_sticker = new Theme_sticker();
+        theme_sticker.setTitle(title);
+        theme_sticker.setClassification(classification);
+        boolean isSuccess = forumService.addTheme_sticker(theme_sticker, user);
+        if(isSuccess){
+            status.setStatus(StatusMsg.ADD_SUCCESS);
+        }else{
+            status.setStatus(StatusMsg.ADD_FAILED);
+        }
+        return status;
+    }
+
+    @loginRequire
+    @RequestMapping(value = "/myStickers", method = RequestMethod.GET)
+    public Theme_sticker[] myStickers(HttpSession session){
+        User user = (User)session.getAttribute("user");
+        Theme_sticker[] stickers = forumService.getTheme_stickerByUser(user);
+        return stickers;
     }
 
 }

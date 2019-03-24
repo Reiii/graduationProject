@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yan.dao.ActivityMapper">
     <insert id="addActivity" parameterType="com.yan.domain.City_activity">
-        insert into city_activity(title, start_time, end_time, province, city, address, detail, cost, uid, time, participants_num, status)
-          values(#{title}, #{start_time}, #{end_time}, #{province}, #{city}, #{address}, #{detail}, #{cost}, #{uid}, #{time}, #{participants_num}, #{status})
+        insert into city_activity(title, start_time, end_time, province, city, address, detail, cost, uid, time, participants_num, status, cover)
+          values(#{title}, #{start_time}, #{end_time}, #{province}, #{city}, #{address}, #{detail}, #{cost}, #{uid}, #{time}, #{participants_num}, #{status}, #{cover})
     </insert>
 
     <delete id="delActivity" parameterType="com.yan.domain.City_activity">
@@ -32,15 +32,15 @@
     </select>
     
     <select id="selectAllActivity" resultType="com.yan.domain.City_activity">
-        select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where end_time > #{city_activity.start_time} limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost, cover from city_activity where end_time > #{city_activity.start_time} limit #{start}, 20
     </select>
     
     <select id="selectActivityByTitle" resultType="com.yan.domain.City_activity">
-        select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where title like "%"#{city_activity.title}"%" and end_time > #{city_activity.start_time} limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost, cover from city_activity where title like "%"#{city_activity.title}"%" and end_time > #{city_activity.start_time} limit #{start}, 20
     </select>
     
     <select id="selectActivityByTime" resultType="com.yan.domain.City_activity">
-        select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where end_time > #{city_activity.start_time} limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost, cover from city_activity where end_time > #{city_activity.start_time} limit #{start}, 20
     </select>
     
     <select id="selectActivityByProvince" resultType="com.yan.domain.City_activity">
@@ -48,15 +48,15 @@
     </select>
 
     <select id="selectActivityByCity" resultType="com.yan.domain.City_activity">
-        select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where city = #{city_activity.city} and end_time > #{city_activity.start_time} limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost, cover from city_activity where city = #{city_activity.city} and end_time > #{city_activity.start_time} limit #{start}, 20
     </select>
 
     <select id="selectActivityByCost" resultType="com.yan.domain.City_activity">
-        select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where #{city_activity.cost} >= cost and end_time > #{city_activity.start_time} limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost, cover from city_activity where #{city_activity.cost} >= cost and end_time > #{city_activity.start_time} limit #{start}, 20
     </select>
 
     <select id="selectActivityByStatus" resultType="com.yan.domain.City_activity">
-        select activity_id, title, start_time, end_time, province, city, address, cost from city_activity where status = #{city_activity.status} limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost, cover from city_activity where status = #{city_activity.status} limit #{start}, 20
     </select>
     
     <select id="selectActivityByUser" resultType="com.yan.domain.City_activity">

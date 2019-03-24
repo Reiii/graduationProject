@@ -22,6 +22,7 @@ public class City_activity implements Serializable {
     private String uid;
     private String time;
     private String participants_num;
+    private String cover;
     private String status;
 
     public String getActivity_id() {
@@ -126,5 +127,13 @@ public class City_activity implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 }

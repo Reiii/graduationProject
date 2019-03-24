@@ -266,6 +266,7 @@ public class MallController {
         return status;
     }
 
+    @loginRequire
     @RequestMapping(value = "/uploadPic", method = RequestMethod.POST)
     public Status uploadPic(@RequestParam(value = "pic") MultipartFile multipartFile) throws IOException {
         Status status = new Status();

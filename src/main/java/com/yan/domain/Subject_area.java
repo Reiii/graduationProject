@@ -15,6 +15,7 @@ public class Subject_area implements Serializable {
     private String theme_num;
     private String post_num;
     private String last_post_time;
+    private String cover;
 
     public Subject_area(){}
 
@@ -62,5 +63,13 @@ public class Subject_area implements Serializable {
 
     public void setLast_post_time(String last_post_time) {
         this.last_post_time = last_post_time;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 }

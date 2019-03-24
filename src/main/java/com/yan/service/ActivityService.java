@@ -4,6 +4,9 @@ import com.yan.domain.City_activity;
 import com.yan.domain.User;
 import com.yan.exception.ActivityException;
 import com.yan.util.Page;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * Package ：com.yan.service
@@ -115,4 +118,11 @@ public interface ActivityService {
      */
     User[] getUsersByCity_activity(City_activity city_activity);
 
+    /**
+     * 提交封面
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    String UploadCover(MultipartFile file) throws IOException;
 }

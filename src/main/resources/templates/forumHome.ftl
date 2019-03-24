@@ -51,7 +51,7 @@
 		<div id="area_list">
             <div class="area" v-for=" a in areas">
                 <div class="pic">
-                    <img src="http://104.248.178.168/images/bxjg.png">
+                    <img :src="a.cover">
                 </div>
                 <ul>
                     <li><a @click="handleDetail(a.subject_id)">{{ a.name }}</a></li>
