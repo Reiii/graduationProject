@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Package ：com.yan.service
@@ -110,7 +111,7 @@ public interface MallService {
      * @param toy
      * @return
      */
-    Comments getComments(Toy toy);
+    List<Map<String, String>> getComments(Toy toy);
 
     /**
      * 添加收藏夹

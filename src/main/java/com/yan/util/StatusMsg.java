@@ -56,4 +56,8 @@ public class StatusMsg {
 
     public static final String DEL_FAILED = "删除失败";
 
+    public static final String GET_SUCCESS = "获取成功";
+
+    public static final String GET_FAILED = "获取失败";
+
 }

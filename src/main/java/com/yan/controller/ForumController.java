@@ -103,7 +103,6 @@ public class ForumController {
         Post post = new Post();
         post.setTheme_id(theme_id);
         post.setContent(content);
-        post.setTime(String.valueOf(new Date().getTime()));
         post.setType("0");
         post.setStatus("0");
         if(forumService.addPost(post, user)){
@@ -132,15 +131,22 @@ public class ForumController {
     }
 
     @loginRequire
-    @RequestMapping(value = "/addThemeSticker", method = RequestMethod.GET)
-    public Status addSticker(@Param("title") String title, @Param("classification") String classification, HttpSession session){
+    @RequestMapping(value = "/addThemeSticker", method = RequestMethod.POST)
+    public Status addSticker(@RequestParam("title") String title, @RequestParam("classification") String classification, @RequestParam("content") String content, @RequestParam("subject_id") String subject_id, HttpSession session){
         Status status = new Status();
         User user = (User)session.getAttribute("user");
         Theme_sticker theme_sticker = new Theme_sticker();
         theme_sticker.setTitle(title);
         theme_sticker.setClassification(classification);
+        theme_sticker.setSubject_id(subject_id);
         boolean isSuccess = forumService.addTheme_sticker(theme_sticker, user);
         if(isSuccess){
+            Post post = new Post();
+            post.setTheme_id(theme_sticker.getTheme_id());
+            post.setContent(content);
+            post.setType("0");
+            post.setStatus("0");
+            forumService.addPost(post, user);
             status.setStatus(StatusMsg.ADD_SUCCESS);
         }else{
             status.setStatus(StatusMsg.ADD_FAILED);
@@ -154,6 +160,18 @@ public class ForumController {
         User user = (User)session.getAttribute("user");
         Theme_sticker[] stickers = forumService.getTheme_stickerByUser(user);
         return stickers;
+    }
+
+    @RequestMapping(value = "/getClassification", method = RequestMethod.GET)
+    public List<String> getClassification() {
+        return forumService.getClassification();
+    }
+
+
+    @loginRequire
+    @RequestMapping(value = "/releaseSticker", method = RequestMethod.GET)
+    public ModelAndView releaseSticker(){
+        return new ModelAndView("releaseSticker");
     }
 
 }

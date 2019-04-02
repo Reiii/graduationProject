@@ -21,10 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Package ：com.yan.controller
@@ -32,7 +29,6 @@ import java.util.Map;
  * date： 2019/1/20 上午11:15
  * author： Li KaiYan
  */
-
 @RestController
 @RequestMapping(value = "/mall")
 public class MallController {
@@ -91,12 +87,12 @@ public class MallController {
     }
 
     @RequestMapping(value = "/getComment", method = RequestMethod.GET)
-    public Comments getComments(HttpSession session){
+    public List<Map<String, String>> getComments(HttpSession session){
         String commodity_id = (String)session.getAttribute("viewItem");
         if(commodity_id != null){
             Toy toy = new Toy();
             toy.setCommodity_id(commodity_id);
-            Comments comments = mallService.getComments(toy);
+            List<Map<String, String>> comments = mallService.getComments(toy);
             return comments;
         }
         return null;
@@ -277,6 +273,30 @@ public class MallController {
             status.setStatus("error");
         }
         return status;
+    }
+
+    @loginRequire
+    @RequestMapping(value = "/addComment", method = RequestMethod.POST)
+    public Status addComment(@RequestParam(value = "content") String content, @RequestParam(value = "commodity_id") String commodity_id, @RequestParam(value = "reply_id", required = false) String reply_id, HttpSession session){
+        Status status = new Status();
+        User user = (User)session.getAttribute("user");
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setTime(String.valueOf(new Date().getTime()));
+        comment.setCommodity_id(commodity_id);
+        if(reply_id == null || "".equals(reply_id)){
+            comment.setType("0");
+        }else{
+            comment.setType("1");
+            comment.setReply_id(reply_id);
+        }
+        if(mallService.addComment(comment, user)){
+            status.setStatus(StatusMsg.ADD_SUCCESS);
+        }else{
+            status.setStatus(StatusMsg.ADD_FAILED);
+        }
+        return status;
+
     }
 
 }

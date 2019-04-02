@@ -15,7 +15,7 @@ public class Comment implements Serializable {
     private String commodity_id;
     private String uid;
     private String content;
-    private Date time;
+    private String time;
     private String type;
     private String reply_id;
 
@@ -51,11 +51,11 @@ public class Comment implements Serializable {
         this.content = content;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

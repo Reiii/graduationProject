@@ -7,6 +7,7 @@ import com.yan.domain.User;
 import com.yan.exception.ForumException;
 import com.yan.util.Page;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -187,5 +188,12 @@ public interface ForumService {
      * @return
      */
     Post[] getPostsByStatus(String status) throws ForumException;
+
+    /**
+     * 获取主题贴分类
+     * @return
+     * @throws ForumException
+     */
+    List<String> getClassification();
 
 }

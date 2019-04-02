@@ -173,6 +173,11 @@
                         </el-table>
                     </el-tab-pane>
 				    <el-tab-pane label="我的帖子">
+                        <el-row>
+                            <el-col>
+                                <el-button type="primary" @click="releaseSticker">发布主题贴</el-button>
+                            </el-col>
+                        </el-row>
                         <el-table :data="myStickers" stripe>
                             <el-table-column
                                     prop="title"
@@ -503,6 +508,9 @@
                         confirmButtonText: '确定'
                     });
                 });
+            },
+            releaseSticker(){
+                window.open("http://localhost:8080/forum/releaseSticker", "_blank")
             }
 		}
 	})

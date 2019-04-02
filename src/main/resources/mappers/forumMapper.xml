@@ -29,7 +29,7 @@
         select * from subject_area
     </select>
     
-    <insert id="addThemeSticker" parameterType="com.yan.domain.Theme_sticker">
+    <insert id="addThemeSticker" useGeneratedKeys="true" keyProperty="theme_id" parameterType="com.yan.domain.Theme_sticker">
         insert into theme_sticker(subject_id, title, classification, time, uid, type, reply_num, views, status)
           values (#{subject_id}, #{title}, #{classification}, #{time}, #{uid}, #{type}, #{reply_num}, #{views}, #{status})
     </insert>
@@ -134,5 +134,9 @@
 
     <select id="countStickerByClassification" parameterType="com.yan.domain.Theme_sticker" resultType="java.lang.Integer">
         select count(*) from theme_sticker where subject_id = #{subject_id} and classification = #{classification}
+    </select>
+    
+    <select id="selectAllClassification" resultType="java.lang.String">
+        select * from theme_sticker_type
     </select>
 </mapper>

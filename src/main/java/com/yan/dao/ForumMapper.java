@@ -213,5 +213,10 @@ public interface ForumMapper {
      */
     int countPostByThemeSticker(Theme_sticker theme_sticker);
 
+    /**
+     * 获取所有主题贴分类
+     * @return
+     */
+    String[] selectAllClassification();
 
 }

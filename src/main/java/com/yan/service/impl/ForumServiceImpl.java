@@ -82,6 +82,13 @@ public class ForumServiceImpl implements ForumService {
             lock.writeLock().lock();
             try{
                 theme_sticker.setUid(user.getUid());
+                String time = String.valueOf(new Date().getTime());
+                theme_sticker.setTime(time);
+                theme_sticker.setLast_reply_time(time);
+                theme_sticker.setReply_num("0");
+                theme_sticker.setViews("0");
+                theme_sticker.setType("0");
+                theme_sticker.setStatus("1");
                 forumMapper.addThemeSticker(theme_sticker);
                 Subject_area subject_area = new Subject_area();
                 subject_area.setSubject_id(theme_sticker.getSubject_id());
@@ -374,5 +381,8 @@ public class ForumServiceImpl implements ForumService {
         return forumMapper.selectPostByStatus(post);
     }
 
-
+    @Override
+    public List<String> getClassification() {
+        return Arrays.asList(forumMapper.selectAllClassification());
+    }
 }

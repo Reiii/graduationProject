@@ -86,5 +86,9 @@
     <insert id="addPic" parameterType="com.yan.domain.Picture">
         insert into picture(commodity_id, url, number) values (#{commodity_id}, #{url}, #{number})
     </insert>
+    
+    <select id="selectCommentByToy" parameterType="com.yan.domain.Toy" resultType="com.yan.domain.Comment">
+        select * from leave_comment where commodity_id = #{commodity_id}
+    </select>
 
 </mapper>

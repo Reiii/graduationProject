@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
  * date： 2019/1/15 下午9:59
  * author： Li KaiYan
  */
-@RestController
+@Controller
 @RequestMapping("/user")
 public class UserController {
     @Autowired

@@ -10,6 +10,28 @@
 	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+    <script src="https://cdn.bootcss.com/wangEditor/10.0.13/wangEditor.js"></script>
+    <script src="/js/formatDate.js"></script>
+
+    <style>
+        .time {
+            float: right;
+            clear: both;
+        }
+        .content {
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+        .comment, .reply_comment {
+            border-bottom: 1px solid lightgray;
+            padding: 5px;
+			overflow: hidden;
+        }
+		.relpy {
+			float: right;
+			clear: both;
+		}
+	</style>
 </head>
 
 <body>
@@ -57,7 +79,30 @@
 							<span v-html="detail"></span>
 						</div>
 						<div class="message" v-bind:style="messageStyle">
-							message
+							<div v-for="c in messages">
+                                <div class="comment" v-if="c.type == 0">
+                                    <div class="comment_info">
+                                        <span class="name">{{ c.username }}</span>
+                                        <span class="time">{{ new Date(parseInt(c.time)).pattern("yyyy-MM-dd hh:mm:ss") }}</span>
+                                    </div>
+                                    <div class="content" v-html="c.content">
+                                    </div>
+                                    <el-button class="relpy" @click="reply_comment(c.uid)">回复</el-button>
+                                </div>
+                                <div class="reply_comment" v-if="c.type == 1">
+                                    <div class="comment_info">
+                                        <span class="name">{{ c.username }}</span>
+                                        <span>回复</span>
+                                        <span class="name">{{ c.reply_username }}</span>
+                                        <span class="time">{{ new Date(parseInt(c.time)).pattern("yyyy-MM-dd hh:mm:ss") }}</span>
+                                    </div>
+                                    <div class="content" v-html="c.content">
+                                    </div>
+                                    <el-button class="relpy" @click="reply_comment(c.uid)">回复</el-button>
+                                </div>
+							</div>
+                            <div ref="editor"></div>
+							<el-button @click="reply_comment">发表</el-button>
 						</div>
 					</el-footer>
 				</el-container>
@@ -86,7 +131,8 @@
 			transction: '',
 			detail: '',
 			messages: [],
-			commodity_id: ''
+			commodity_id: '',
+			content: ''
 		},
 		mounted(){
 			axios.get("http://localhost:8080/mall/getToyInfo")
@@ -114,7 +160,36 @@
 				}).catch(function(error){
 					console.log(error);
 				});
-
+			axios.get("http://localhost:8080/mall/getComment")
+					.then((response) => {
+					    this.messages = response.data;
+			}).catch(function(error){
+			    console.log(error);
+			})
+            var E = window.wangEditor;
+            var editor = new E(this.$refs.editor);
+            editor.customConfig.uploadImgShowBase64 = true;
+            editor.customConfig.menus = [
+                'head',  // 标题
+                'bold',  // 粗体
+                'fontSize',  // 字号
+                'fontName',  // 字体
+                'italic',  // 斜体
+                'underline',  // 下划线
+                'strikeThrough',  // 删除线
+                'foreColor',  // 文字颜色
+                'backColor',  // 背景颜色
+                'list',  // 列表
+                'justify',  // 对齐方式
+                'emoticon',  // 表情
+                'image',  // 插入图片
+                'undo',  // 撤销
+                'redo'  // 重复
+            ];
+            editor.customConfig.onchange = (html) => {
+                this.content = html;
+            };
+            editor.create();
 		},
 		methods: {
 			handleSelect(key){
@@ -129,6 +204,44 @@
 			},
 			handleBuy(){
 			    location.href = 'http://localhost:8080/mall/doBuy?commodity_id=' + this.commodity_id;
+			},
+			reply_comment(uid){
+			    var param;
+			    if(uid == null){
+			        param = {
+                        content: this.content,
+						commodity_id: this.commodity_id,
+                        relpy_id: uid
+					}
+				}else{
+			        param = {
+                        content: this.content,
+                        commodity_id: this.commodity_id,
+
+                    }
+				}
+                axios({
+                    url: 'http://localhost:8080/mall/addComment',
+                    method: 'post',
+                    data: param,
+                    transformRequest: [
+                        function (data) {
+                            // Do whatever you want to transform the data
+                            let ret = ''
+                            for (let it in data) {
+                                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                            }
+                            return ret
+                        }
+                    ],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(response){
+                    win.$alert(response.data.msg, '提示', {
+                        confirmButtonText: '确定'
+                    })
+                })
 			}
 		}
 	})

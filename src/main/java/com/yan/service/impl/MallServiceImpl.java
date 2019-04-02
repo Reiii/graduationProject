@@ -207,11 +207,26 @@ public class MallServiceImpl implements MallService{
     }
 
     @Override
-    public Comments getComments(Toy toy) {
+    public List<Map<String, String>> getComments(Toy toy) {
+        List<Map<String, String>> list = new ArrayList<>();
         Comment[] comments = mallMapper.selectCommentByToy(toy);
-        Comments commentlist = new Comments();
-        commentlist.setComments(Arrays.asList(comments));
-        return commentlist;
+        for (Comment comment : comments) {
+            Map<String, String> map = new HashMap<>();
+            User user = new User();
+            user.setUid(comment.getUid());
+            map.put("uid", comment.getUid());
+            map.put("username", userMapper.selectById(user).getUsername());
+            map.put("content", comment.getContent());
+            map.put("time", comment.getTime());
+            map.put("type", comment.getType());
+            if(comment.getType().equals("1")){
+                User reply_user = new User();
+                reply_user.setUid(comment.getReply_id());
+                map.put("reply_username", userMapper.selectById(reply_user).getUsername());
+            }
+            list.add(map);
+        }
+        return list;
     }
 
     @Override
