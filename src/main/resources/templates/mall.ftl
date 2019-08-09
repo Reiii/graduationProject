@@ -28,6 +28,10 @@
             width: 100%;
             height: 100%;
         }
+        .user-info{
+            border-top: 1px solid lightgray;
+        }
+
     </style>
 </head>
 <body>
@@ -71,6 +75,10 @@
                         </div>
                         <div class="item-title">{{ i.toy.title }}</div>
                         <div class="item-price"><font color="red" size="4">¥ {{ i.toy.price }}</font></div>
+                        <div class="user-info">
+                            <div class="username">{{ i.user.username }}</div>
+                            <div class="address">{{ i.toy.province }} {{ i.toy.city }}</div>
+                        </div>
                 </a>
                 </span>
             </div>

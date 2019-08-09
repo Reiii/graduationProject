@@ -91,4 +91,7 @@
         select * from leave_comment where commodity_id = #{commodity_id}
     </select>
 
+    <insert id="addComment" parameterType="com.yan.domain.Comment">
+        insert into leave_comment(commodity_id, uid, content, time, type, reply_id) values (#{commodity_id}, #{uid}, #{content}, #{time}, #{type}, #{reply_id})
+    </insert>
 </mapper>

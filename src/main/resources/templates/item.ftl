@@ -206,12 +206,13 @@
 			    location.href = 'http://localhost:8080/mall/doBuy?commodity_id=' + this.commodity_id;
 			},
 			reply_comment(uid){
+			    var win = this;
 			    var param;
-			    if(uid == null){
+			    if(uid != null){
 			        param = {
                         content: this.content,
 						commodity_id: this.commodity_id,
-                        relpy_id: uid
+                        reply_id: uid
 					}
 				}else{
 			        param = {
@@ -238,7 +239,7 @@
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response){
-                    win.$alert(response.data.msg, '提示', {
+                    win.$alert(response.data.status, '提示', {
                         confirmButtonText: '确定'
                     })
                 })

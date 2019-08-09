@@ -32,7 +32,7 @@
     </select>
     
     <select id="selectAllActivity" resultType="com.yan.domain.City_activity">
-        select activity_id, title, start_time, end_time, province, city, address, cost, cover from city_activity where end_time > #{city_activity.start_time} limit #{start}, 20
+        select activity_id, title, start_time, end_time, province, city, address, cost, cover from city_activity where end_time > #{city_activity.start_time} order by time desc limit #{start}, 20
     </select>
     
     <select id="selectActivityByTitle" resultType="com.yan.domain.City_activity">

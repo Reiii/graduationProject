@@ -21,7 +21,7 @@
 			float: left;
 		}
 		.info {
-			margin-left: 30px;
+			margin-left: 500px;
 		}
 		li {
 			list-style: none

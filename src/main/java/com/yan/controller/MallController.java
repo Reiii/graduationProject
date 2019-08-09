@@ -3,7 +3,6 @@ package com.yan.controller;
 import com.yan.constant.loginRequire;
 import com.yan.domain.*;
 import com.yan.exception.MallException;
-import com.yan.service.MallService;
 import com.yan.service.impl.MallServiceImpl;
 import com.yan.service.impl.UserServiceImpl;
 import com.yan.util.Page;
@@ -38,7 +37,7 @@ public class MallController {
     private UserServiceImpl userService;
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
-    public ModelAndView homePage() throws MallException {
+    public ModelAndView homePage() {
         ModelAndView mav = new ModelAndView("mall");
         return mav;
     }

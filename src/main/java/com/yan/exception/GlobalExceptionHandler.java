@@ -29,11 +29,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = NoLoginException.class)
-    public ErrorInfo<NoLoginException> handleNoLoginException(HttpServletResponse response, NoLoginException ex){
-        ErrorInfo<NoLoginException> info = new ErrorInfo<>();
-        info.setCode(ErrorInfo.ERROR);
-        info.setMsg(ex.getMessage());
-        return info;
+    public void handleNoLoginException(HttpServletResponse response, NoLoginException ex){
+        try{
+            response.sendRedirect("/user/login");
+
+        }catch (Exception e){
+
+        }
 
     }
 

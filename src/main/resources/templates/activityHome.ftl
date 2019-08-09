@@ -63,7 +63,7 @@
 				<div id="activity_list">
 					
 							<div class="item" v-for=" i in items">
-								<div class="pic" >
+								<div class="pic" style="overflow: hidden">
 									<img :src="i.cover">
 								</div>
 								<div class="info">
@@ -71,7 +71,7 @@
                                         <li><a @click="handleDetail(i.activity_id)">{{ i.title}}</a></li>
                                         <li>开始时间: {{ new Date(parseInt(i.start_time)).pattern("yyyy-MM-dd hh:mm:ss") }}</li>
 										<li>结束时间: {{ new Date(parseInt(i.end_time)).pattern("yyyy-MM-dd hh:mm:ss") }}</li>
-                                        <li>地址: {{ i.address }}</li>
+                                        <li>地址:{{ i.province }} {{ i.city }} {{ i.address }}</li>
                                         <li>费用: {{ i.cost }}</li>
                                     </ul>
 								</div>
